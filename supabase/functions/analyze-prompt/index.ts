@@ -32,7 +32,7 @@ DEVI restituire una risposta JSON valida con questa struttura esatta:
       "description": "<descrizione breve>"
     }
   ],
-  "optimizedPrompt": "<versione migliorata del prompt in markdown>",
+  "optimizedPrompt": "<PROMPT DETTAGLIATO in markdown - VEDI REGOLE SOTTO>",
   "technologies": [
     {
       "category": "<categoria>",
@@ -88,12 +88,71 @@ CATEGORIE STACK TECNOLOGICO (TUTTE OBBLIGATORIE - ESATTAMENTE 6):
 5. "Autenticazione" - Supabase Auth, Clerk, Auth0
 6. "Hosting" - Vercel, Netlify, AWS
 
-REGOLE IMPORTANTI:
+REGOLE PER optimizedPrompt (MOLTO IMPORTANTE - GENERA UN PROMPT DETTAGLIATO):
+Il campo optimizedPrompt deve essere un prompt COMPLETO, DETTAGLIATO e PROFESSIONALE in markdown con questa struttura OBBLIGATORIA:
+
+# [Nome Progetto]: Specifiche Tecniche Complete
+
+## 1. Panoramica del Progetto
+### 1.1 Obiettivo Principale
+[Descrizione dettagliata dell'obiettivo - minimo 3-4 frasi]
+
+### 1.2 Problema da Risolvere
+[Quale problema risolve questa applicazione - minimo 2-3 frasi]
+
+### 1.3 Proposta di Valore
+[Cosa rende questa soluzione unica - minimo 2 punti]
+
+## 2. Target Utenti
+### 2.1 Utente Primario
+- **Profilo**: [descrizione dettagliata]
+- **Bisogni**: [lista di 3-5 bisogni]
+- **Pain Points**: [problemi attuali che affronta]
+
+### 2.2 Casi d'Uso Principali
+[Lista di 4-6 casi d'uso dettagliati con formato: "Come [utente], voglio [azione] per [beneficio]"]
+
+## 3. Funzionalità Core (MVP)
+### 3.1 Funzionalità Essenziali
+[Lista dettagliata di 5-8 funzionalità con descrizione per ciascuna]
+
+### 3.2 Flussi Utente Principali
+[Descrizione di 2-3 flussi utente principali passo-passo]
+
+## 4. Requisiti Non Funzionali
+### 4.1 Performance
+- Tempo di caricamento target: [specificare]
+- Metriche chiave: [lista]
+
+### 4.2 Sicurezza
+- Autenticazione: [dettagli]
+- Protezione dati: [dettagli]
+
+### 4.3 Scalabilità
+[Considerazioni sulla crescita]
+
+## 5. Stack Tecnologico Consigliato
+[Riassunto delle tecnologie suggerite con motivazioni]
+
+## 6. Vincoli e Considerazioni
+### 6.1 Vincoli Tecnici
+[Lista di vincoli]
+
+### 6.2 Integrazioni Necessarie
+[API o servizi esterni da integrare]
+
+## 7. Criteri di Successo
+[Metriche per valutare il successo del progetto - minimo 3-4 KPI]
+
+IMPORTANTE: Il prompt ottimizzato DEVE essere MOLTO più dettagliato e strutturato del prompt originale. Deve essere almeno 3-4 volte più lungo e contenere TUTTE le sezioni sopra. NON essere sintetico!
+
+REGOLE GENERALI:
 - Includi SEMPRE tutte e 6 le categorie tecnologiche
 - Usa ESATTAMENTE questi nomi di categoria
 - Rispondi SOLO con JSON valido, nessun testo prima o dopo
-- Sii conciso nelle descrizioni (max 2 frasi per campo)
-- Identifica almeno 3 punti di forza e 3 debolezze`;
+- Sii conciso nelle descrizioni delle dimensions (max 2 frasi per campo)
+- Identifica almeno 3 punti di forza e 3 debolezze
+- Il campo optimizedPrompt deve essere MOLTO DETTAGLIATO (minimo 800 parole)`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
