@@ -64,17 +64,47 @@ export function OptimizedPrompt({ originalPrompt, optimizedPrompt }: OptimizedPr
         </Button>
       </div>
       
-      <div className="p-5 rounded-lg bg-card border border-border">
-        <div className="prose prose-invert prose-sm max-w-none">
+      <div className="p-6 rounded-xl bg-card/50 border border-border/50 relative z-10">
+        <div className="prose prose-invert max-w-none">
           <ReactMarkdown
             components={{
-              h1: ({ children }) => <h1 className="text-xl font-bold text-primary mb-4">{children}</h1>,
-              h2: ({ children }) => <h2 className="text-lg font-semibold text-foreground mt-6 mb-3">{children}</h2>,
-              h3: ({ children }) => <h3 className="text-base font-medium text-foreground mt-4 mb-2">{children}</h3>,
-              p: ({ children }) => <p className="text-muted-foreground mb-3">{children}</p>,
-              ul: ({ children }) => <ul className="list-disc list-inside space-y-1 mb-3">{children}</ul>,
-              li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
-              strong: ({ children }) => <strong className="text-foreground font-semibold">{children}</strong>,
+              h1: ({ children }) => (
+                <h1 className="text-2xl font-bold text-primary mb-6 pb-3 border-b border-primary/20">
+                  {children}
+                </h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-xl font-semibold text-foreground mt-8 mb-4 flex items-center gap-3">
+                  <span className="w-1.5 h-6 bg-primary rounded-full" />
+                  {children}
+                </h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-base font-medium text-primary/90 mt-5 mb-3">
+                  {children}
+                </h3>
+              ),
+              p: ({ children }) => (
+                <p className="text-muted-foreground leading-relaxed mb-4 text-[15px]">
+                  {children}
+                </p>
+              ),
+              ul: ({ children }) => (
+                <ul className="space-y-3 mb-5 ml-1">
+                  {children}
+                </ul>
+              ),
+              li: ({ children }) => (
+                <li className="flex items-start gap-3 text-[15px] leading-relaxed">
+                  <span className="mt-2 w-2 h-2 rounded-full bg-primary/60 flex-shrink-0" />
+                  <span className="text-muted-foreground">{children}</span>
+                </li>
+              ),
+              strong: ({ children }) => (
+                <strong className="text-foreground font-semibold">
+                  {children}
+                </strong>
+              ),
             }}
           >
             {optimizedPrompt}
