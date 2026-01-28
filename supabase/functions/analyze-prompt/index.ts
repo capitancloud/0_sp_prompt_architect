@@ -105,6 +105,18 @@ REGOLE CATEGORIE:
 - Usa ESATTAMENTE questi nomi di categoria (no varianti come "Auth", "Infrastructure", "Backend/AI")
 - Suggerisci tecnologie appropriate al contesto del prompt per ogni categoria
 
+REGOLA CRITICA - COERENZA TRA SEZIONI:
+Le tecnologie specificate nell'array "technologies" DEVONO essere IDENTICHE a quelle nell'array "architecture". 
+Per garantire la coerenza:
+1. Prima definisci le tecnologie nell'array "technologies"
+2. Poi usa ESATTAMENTE gli stessi nomi in "architecture":
+   - technologies[category="Frontend"].primary.name === architecture[componente frontend].technology
+   - technologies[category="Backend"].primary.name === architecture[componente backend/api].technology
+   - technologies[category="Database"].primary.name === architecture[componente database].technology
+   - technologies[category="Autenticazione"].primary.name === architecture[componente auth].technology
+3. NON usare varianti (es. "React" vs "React + Vite", oppure "Next.js" vs "Next.js (App Router)")
+4. Scegli UN nome per ogni tecnologia e usalo IDENTICAMENTE in entrambe le sezioni
+
 LINEE GUIDA:
 - Sii specifico e concreto nei suggerimenti
 - Fornisci esempi pratici di come migliorare il prompt
