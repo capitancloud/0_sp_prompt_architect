@@ -7,9 +7,10 @@ import { OptimizedPrompt } from "./OptimizedPrompt";
 import { TechStackSection } from "./TechStackSection";
 import { ArchitectureDiagramEnhanced } from "./ArchitectureDiagramEnhanced";
 import { SimplifiedArchitecture } from "./SimplifiedArchitecture";
+import { ImplementationRoadmap } from "./ImplementationRoadmap";
 import { BestPracticesSection } from "./BestPracticesSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, Sparkles, Layers, Code2, BookOpen } from "lucide-react";
+import { BarChart3, Sparkles, Layers, Code2, BookOpen, Rocket } from "lucide-react";
 
 interface AnalysisResultsProps {
   result: AnalysisResult;
@@ -66,6 +67,10 @@ export function AnalysisResults({ result, originalPrompt }: AnalysisResultsProps
             <Layers className="w-4 h-4" />
             Architettura
           </TabsTrigger>
+          <TabsTrigger value="roadmap" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
+            <Rocket className="w-4 h-4" />
+            Roadmap
+          </TabsTrigger>
           <TabsTrigger value="practices" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
             <BookOpen className="w-4 h-4" />
             Best Practices
@@ -95,6 +100,10 @@ export function AnalysisResults({ result, originalPrompt }: AnalysisResultsProps
           <SimplifiedArchitecture components={result.architecture} />
           <TechStackSection technologies={result.technologies} />
           <ArchitectureDiagramEnhanced components={result.architecture} />
+        </TabsContent>
+        
+        <TabsContent value="roadmap" className="mt-0">
+          <ImplementationRoadmap components={result.architecture} />
         </TabsContent>
         
         <TabsContent value="practices" className="space-y-6 mt-0">
