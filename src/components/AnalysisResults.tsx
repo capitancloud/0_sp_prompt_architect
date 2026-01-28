@@ -5,7 +5,8 @@ import { DimensionCard } from "./DimensionCard";
 import { StrengthsWeaknesses } from "./StrengthsWeaknesses";
 import { OptimizedPrompt } from "./OptimizedPrompt";
 import { TechStackSection } from "./TechStackSection";
-import { ArchitectureDiagram } from "./ArchitectureDiagram";
+import { ArchitectureDiagramEnhanced } from "./ArchitectureDiagramEnhanced";
+import { SimplifiedArchitecture } from "./SimplifiedArchitecture";
 import { BestPracticesSection } from "./BestPracticesSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, Sparkles, Layers, Code2, BookOpen } from "lucide-react";
@@ -91,8 +92,9 @@ export function AnalysisResults({ result, originalPrompt }: AnalysisResultsProps
         </TabsContent>
         
         <TabsContent value="architecture" className="space-y-6 mt-0">
+          <SimplifiedArchitecture components={result.architecture} />
           <TechStackSection technologies={result.technologies} />
-          <ArchitectureDiagram components={result.architecture} />
+          <ArchitectureDiagramEnhanced components={result.architecture} />
         </TabsContent>
         
         <TabsContent value="practices" className="space-y-6 mt-0">
