@@ -1,5 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
-import { AnalysisResult, ArchitectureComponent } from "@/types/analysis";
+import { AnalysisResult, ArchitectureComponent, TechnologySuggestion } from "@/types/analysis";
+
+// Fixed categories - always present in this order
+export const FIXED_CATEGORIES = ["Frontend", "Styling", "Backend", "Database", "Autenticazione", "Hosting"] as const;
+export type FixedCategory = typeof FIXED_CATEGORIES[number];
 
 // Keyword mappings for category detection
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
@@ -51,8 +55,11 @@ export function validateAndSyncArchitecture(result: AnalysisResult): {
     console.warn("Architecture sync corrections applied:", corrections);
   }
 
+  // Ensure all 6 categories are present
+  const ensuredTechnologies = ensureAllCategories(result.technologies);
+
   return { 
-    result: { ...result, architecture: syncedArchitecture }, 
+    result: { ...result, architecture: syncedArchitecture, technologies: ensuredTechnologies }, 
     isSynced: corrections.length === 0,
     corrections
   };
@@ -78,4 +85,38 @@ export async function analyzePrompt(prompt: string): Promise<{
 
   // Validate and sync the result
   return validateAndSyncArchitecture(data as AnalysisResult);
+}
+
+// Create placeholder for missing categories
+function createPlaceholder(category: string): TechnologySuggestion {
+  return {
+    category,
+    primary: {
+      name: "Da definire",
+      reason: "L'AI non ha fornito un suggerimento per questa categoria",
+      pros: ["Flessibilità nella scelta"],
+      cons: ["Richiede valutazione manuale"]
+    },
+    alternative: {
+      name: "Vedi best practices",
+      reason: "Consulta la documentazione del settore",
+      whenToUse: "Quando hai requisiti specifici"
+    }
+  };
+}
+
+// Ensure all 6 fixed categories are present and in correct order
+export function ensureAllCategories(technologies: TechnologySuggestion[]): TechnologySuggestion[] {
+  const categoryMap = new Map(technologies.map(t => [t.category, t]));
+  
+  const result = FIXED_CATEGORIES.map(category => {
+    const existing = categoryMap.get(category);
+    if (!existing) {
+      console.warn(`Missing category: ${category}, adding placeholder`);
+      return createPlaceholder(category);
+    }
+    return existing;
+  });
+  
+  return result;
 }

@@ -34,7 +34,7 @@ DEVI restituire una risposta JSON valida con questa struttura esatta:
   "optimizedPrompt": "<versione migliorata del prompt in markdown>",
   "technologies": [
     {
-      "category": "<Frontend|Styling|Backend|Database|Autenticazione>",
+      "category": "<vedi CATEGORIE OBBLIGATORIE sotto>",
       "primary": {
         "name": "<nome tecnologia>",
         "reason": "<motivazione>",
@@ -90,6 +90,20 @@ DIMENSIONI DA VALUTARE (tutte obbligatorie):
 6. Considerazioni Sicurezza (icon: 🔒)
 7. Manutenibilità (icon: 🔧)
 8. Consapevolezza Architetturale (icon: 🏗️)
+
+CATEGORIE STACK TECNOLOGICO (TUTTE OBBLIGATORIE):
+L'array "technologies" DEVE contenere ESATTAMENTE 6 elementi, uno per ogni categoria nell'ordine:
+1. "Frontend" - Framework/libreria per UI (React, Next.js, Vue, Angular)
+2. "Styling" - Sistema di styling (Tailwind CSS, CSS Modules, Styled Components, Sass)
+3. "Backend" - Logica server e API (Node.js, Edge Functions, Express, FastAPI)
+4. "Database" - Persistenza dati (PostgreSQL, Supabase, MongoDB, MySQL)
+5. "Autenticazione" - Gestione utenti (Supabase Auth, Clerk, Auth0, NextAuth)
+6. "Hosting" - Piattaforma deployment (Vercel, Netlify, AWS, Railway)
+
+REGOLE CATEGORIE:
+- Includi SEMPRE tutte e 6 le categorie, anche se il prompt non le menziona esplicitamente
+- Usa ESATTAMENTE questi nomi di categoria (no varianti come "Auth", "Infrastructure", "Backend/AI")
+- Suggerisci tecnologie appropriate al contesto del prompt per ogni categoria
 
 LINEE GUIDA:
 - Sii specifico e concreto nei suggerimenti
