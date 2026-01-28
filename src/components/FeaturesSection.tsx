@@ -74,11 +74,11 @@ const itemVariants = {
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-16 md:py-24 px-4 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-0 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-0 w-48 md:w-72 h-48 md:h-72 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-64 md:w-96 h-64 md:h-96 bg-accent/10 rounded-full blur-3xl" />
       </div>
       
       <div className="max-w-6xl mx-auto relative z-10">
@@ -87,20 +87,20 @@ export function FeaturesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">Funzionalità</span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 px-2">
             Tutto ciò di cui hai bisogno per
             <br />
             <span className="gradient-text">prompt perfetti</span>
           </h2>
           
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
             Un'analisi completa e professionale che trasforma le tue idee in specifiche tecniche pronte per essere sviluppate.
           </p>
         </motion.div>
@@ -110,13 +110,13 @@ export function FeaturesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
         >
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               variants={itemVariants}
-              className="glass-card p-6 group hover:scale-[1.02] transition-all duration-300"
+              className="glass-card p-5 md:p-6 group hover:scale-[1.02] transition-all duration-300"
             >
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                 <feature.icon className="w-6 h-6 text-primary-foreground" />

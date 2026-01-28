@@ -46,10 +46,10 @@ const plans = [
 
 export function PricingSection() {
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-16 md:py-24 px-4 relative">
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[800px] h-[400px] md:h-[600px] bg-primary/5 rounded-full blur-3xl" />
       </div>
       
       <div className="max-w-5xl mx-auto relative z-10">
@@ -58,25 +58,25 @@ export function PricingSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4 md:mb-6">
             <Zap className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">Prezzi</span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 px-2">
             Inizia gratis,
             <br />
             <span className="gradient-text">scala quando vuoi</span>
           </h2>
           
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
             Iscriviti per ottenere la tua prima analisi completamente gratuita. Passa al piano Pro per ricerche illimitate.
           </p>
         </motion.div>
         
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -84,7 +84,7 @@ export function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative rounded-2xl p-8 ${
+              className={`relative rounded-2xl p-6 md:p-8 ${
                 plan.popular 
                   ? 'glass-card-elevated gradient-border' 
                   : 'glass-card'
@@ -105,8 +105,8 @@ export function PricingSection() {
                 <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
               </div>
               
-              <div className="mb-4">
-                <span className="text-4xl font-bold text-foreground">{plan.price}</span>
+              <div className="mb-3 md:mb-4">
+                <span className="text-3xl md:text-4xl font-bold text-foreground">{plan.price}</span>
                 <span className="text-muted-foreground">{plan.period}</span>
               </div>
               
