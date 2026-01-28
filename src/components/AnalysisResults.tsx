@@ -5,9 +5,9 @@ import { DimensionCard } from "./DimensionCard";
 import { StrengthsWeaknesses } from "./StrengthsWeaknesses";
 import { OptimizedPrompt } from "./OptimizedPrompt";
 import { TechStackSection } from "./TechStackSection";
-import { ArchitectureDiagramEnhanced } from "./ArchitectureDiagramEnhanced";
-import { SimplifiedArchitecture } from "./SimplifiedArchitecture";
-import { ImplementationRoadmap } from "./ImplementationRoadmap";
+import { ArchitectureDiagramFromStack } from "./ArchitectureDiagramFromStack";
+import { SimplifiedArchitectureFromStack } from "./SimplifiedArchitectureFromStack";
+import { ImplementationRoadmapFromStack } from "./ImplementationRoadmapFromStack";
 import { BestPracticesSection } from "./BestPracticesSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, Sparkles, Layers, Code2, BookOpen, Rocket } from "lucide-react";
@@ -98,13 +98,13 @@ export function AnalysisResults({ result, originalPrompt, isSynced = true }: Ana
         </TabsContent>
         
         <TabsContent value="architecture" className="space-y-6 mt-0">
-          <SimplifiedArchitecture components={result.architecture} />
+          <SimplifiedArchitectureFromStack technologies={result.technologies} />
           <TechStackSection technologies={result.technologies} isSynced={isSynced} />
-          <ArchitectureDiagramEnhanced components={result.architecture} />
+          <ArchitectureDiagramFromStack technologies={result.technologies} />
         </TabsContent>
         
         <TabsContent value="roadmap" className="mt-0">
-          <ImplementationRoadmap components={result.architecture} />
+          <ImplementationRoadmapFromStack technologies={result.technologies} />
         </TabsContent>
         
         <TabsContent value="practices" className="space-y-6 mt-0">
