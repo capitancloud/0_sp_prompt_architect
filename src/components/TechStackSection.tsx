@@ -12,30 +12,25 @@ interface TechStackCardProps {
   onToggle: () => void;
 }
 
+// Fixed categories - always displayed in this order
+const FIXED_CATEGORIES = ["Frontend", "Styling", "Backend", "Database", "Autenticazione", "Hosting"] as const;
+
 const categoryIcons: Record<string, string> = {
   "Frontend": "⚛️",
   "Styling": "🎨",
-  "Backend/AI": "🤖",
   "Backend": "⚙️",
   "Database": "🗄️",
   "Autenticazione": "🔐",
-  "Auth": "🔐",
-  "Infrastructure": "🌐",
-  "Hosting": "☁️",
-  "API": "🔌"
+  "Hosting": "☁️"
 };
 
 const categoryColors: Record<string, { gradient: string; bg: string; text: string; border: string }> = {
   "Frontend": { gradient: "from-cyan-500 to-blue-600", bg: "bg-cyan-500/10", text: "text-cyan-400", border: "border-cyan-500/30" },
   "Styling": { gradient: "from-pink-500 to-rose-600", bg: "bg-pink-500/10", text: "text-pink-400", border: "border-pink-500/30" },
-  "Backend/AI": { gradient: "from-violet-500 to-purple-600", bg: "bg-violet-500/10", text: "text-violet-400", border: "border-violet-500/30" },
   "Backend": { gradient: "from-violet-500 to-purple-600", bg: "bg-violet-500/10", text: "text-violet-400", border: "border-violet-500/30" },
   "Database": { gradient: "from-amber-500 to-orange-600", bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/30" },
   "Autenticazione": { gradient: "from-emerald-500 to-green-600", bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
-  "Auth": { gradient: "from-emerald-500 to-green-600", bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
-  "Infrastructure": { gradient: "from-slate-500 to-gray-600", bg: "bg-slate-500/10", text: "text-slate-400", border: "border-slate-500/30" },
-  "Hosting": { gradient: "from-indigo-500 to-blue-600", bg: "bg-indigo-500/10", text: "text-indigo-400", border: "border-indigo-500/30" },
-  "API": { gradient: "from-teal-500 to-cyan-600", bg: "bg-teal-500/10", text: "text-teal-400", border: "border-teal-500/30" },
+  "Hosting": { gradient: "from-indigo-500 to-blue-600", bg: "bg-indigo-500/10", text: "text-indigo-400", border: "border-indigo-500/30" }
 };
 
 const getColors = (category: string) => {
@@ -384,6 +379,11 @@ interface TechStackSectionProps {
 export function TechStackSection({ technologies, isSynced = true }: TechStackSectionProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
+  // Sort technologies according to fixed category order
+  const sortedTechnologies = FIXED_CATEGORIES
+    .map(category => technologies.find(t => t.category === category))
+    .filter((t): t is TechnologySuggestion => t !== undefined);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -411,12 +411,12 @@ export function TechStackSection({ technologies, isSynced = true }: TechStackSec
           )}
         </div>
         <div className="text-xs text-muted-foreground bg-muted/30 px-3 py-1.5 rounded-full">
-          {technologies.length} tecnologie
+          {sortedTechnologies.length} tecnologie
         </div>
       </div>
       
       <div className="grid md:grid-cols-2 gap-4">
-        {technologies.map((tech, index) => (
+        {sortedTechnologies.map((tech, index) => (
           <TechStackCard 
             key={tech.category} 
             tech={tech} 
