@@ -27,28 +27,28 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-24 px-4 relative bg-card/30">
+    <section className="py-16 md:py-24 px-4 relative bg-card/30">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4 md:mb-6">
             <Star className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">Testimonianze</span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6">
             Amato da
             <br />
             <span className="gradient-text">sviluppatori e PM</span>
           </h2>
         </motion.div>
         
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.name}
@@ -56,7 +56,7 @@ export function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="glass-card p-6 relative"
+              className="glass-card p-5 md:p-6 relative"
             >
               <Quote className="absolute top-4 right-4 w-8 h-8 text-primary/20" />
               
