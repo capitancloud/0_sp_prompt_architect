@@ -6,6 +6,11 @@ import { AnalysisResult } from "@/types/analysis";
 import { analyzePrompt } from "@/services/analysisService";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { FeaturesSection } from "@/components/FeaturesSection";
+import { HowItWorksSection } from "@/components/HowItWorksSection";
+import { PricingSection } from "@/components/PricingSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { CTASection } from "@/components/CTASection";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +75,13 @@ const Index = () => {
                 transition={{ duration: 0.3 }}
               >
                 <PromptInput onAnalyze={handleAnalyze} isLoading={isLoading} />
+                
+                {/* Sales page sections */}
+                <FeaturesSection />
+                <HowItWorksSection />
+                <TestimonialsSection />
+                <PricingSection />
+                <CTASection />
               </motion.div>
             ) : (
               <motion.div
