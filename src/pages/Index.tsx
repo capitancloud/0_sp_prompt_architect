@@ -11,6 +11,8 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [analyzedPrompt, setAnalyzedPrompt] = useState<string>("");
+  const [isSynced, setIsSynced] = useState(true);
+  const [syncCorrections, setSyncCorrections] = useState<string[]>([]);
   const { toast } = useToast();
 
   const handleAnalyze = async (prompt: string) => {
@@ -18,8 +20,14 @@ const Index = () => {
     setAnalyzedPrompt(prompt);
     
     try {
-      const result = await analyzePrompt(prompt);
+      const { result, isSynced: synced, corrections } = await analyzePrompt(prompt);
       setAnalysisResult(result);
+      setIsSynced(synced);
+      setSyncCorrections(corrections);
+      
+      if (!synced && corrections.length > 0) {
+        console.info("Architecture was automatically synced with tech stack:", corrections);
+      }
     } catch (error) {
       console.error("Analysis failed:", error);
       toast({
@@ -35,6 +43,8 @@ const Index = () => {
   const handleReset = () => {
     setAnalysisResult(null);
     setAnalyzedPrompt("");
+    setIsSynced(true);
+    setSyncCorrections([]);
   };
 
   return (
@@ -79,7 +89,7 @@ const Index = () => {
                   </button>
                 </div>
                 
-                <AnalysisResults result={analysisResult} originalPrompt={analyzedPrompt} />
+                <AnalysisResults result={analysisResult} originalPrompt={analyzedPrompt} isSynced={isSynced} />
               </motion.div>
             )}
           </AnimatePresence>

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { TechnologySuggestion } from "@/types/analysis";
-import { Check, X, ArrowRight, Lightbulb, Scale, Target, BookOpen, Zap, AlertCircle } from "lucide-react";
+import { Check, X, ArrowRight, Lightbulb, Scale, Target, BookOpen, Zap, AlertCircle, Link2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface TechStackCardProps {
   tech: TechnologySuggestion;
@@ -375,9 +376,10 @@ function getComparisonData(primary: string, alternative: string): { aspect: stri
 
 interface TechStackSectionProps {
   technologies: TechnologySuggestion[];
+  isSynced?: boolean;
 }
 
-export function TechStackSection({ technologies }: TechStackSectionProps) {
+export function TechStackSection({ technologies, isSynced = true }: TechStackSectionProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   return (
@@ -387,11 +389,24 @@ export function TechStackSection({ technologies }: TechStackSectionProps) {
       transition={{ duration: 0.5 }}
     >
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-bold gradient-text">Stack Tecnologico Suggerito</h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Tecnologie raccomandate con analisi dettagliata e confronti
-          </p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h2 className="text-xl font-bold gradient-text">Stack Tecnologico Suggerito</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Tecnologie raccomandate con analisi dettagliata e confronti
+            </p>
+          </div>
+          {isSynced ? (
+            <Badge className="bg-success/20 text-success border-success/30 gap-1">
+              <Link2 className="w-3 h-3" />
+              Sincronizzato
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30 gap-1">
+              <AlertCircle className="w-3 h-3" />
+              Corretto
+            </Badge>
+          )}
         </div>
         <div className="text-xs text-muted-foreground bg-muted/30 px-3 py-1.5 rounded-full">
           {technologies.length} tecnologie

@@ -15,9 +15,10 @@ import { BarChart3, Sparkles, Layers, Code2, BookOpen, Rocket } from "lucide-rea
 interface AnalysisResultsProps {
   result: AnalysisResult;
   originalPrompt: string;
+  isSynced?: boolean;
 }
 
-export function AnalysisResults({ result, originalPrompt }: AnalysisResultsProps) {
+export function AnalysisResults({ result, originalPrompt, isSynced = true }: AnalysisResultsProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -98,7 +99,7 @@ export function AnalysisResults({ result, originalPrompt }: AnalysisResultsProps
         
         <TabsContent value="architecture" className="space-y-6 mt-0">
           <SimplifiedArchitecture components={result.architecture} />
-          <TechStackSection technologies={result.technologies} />
+          <TechStackSection technologies={result.technologies} isSynced={isSynced} />
           <ArchitectureDiagramEnhanced components={result.architecture} />
         </TabsContent>
         

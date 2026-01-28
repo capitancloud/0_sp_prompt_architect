@@ -98,7 +98,19 @@ LINEE GUIDA:
 - Le tecnologie suggerite devono essere moderne e adatte al caso
 - Identifica almeno 3 punti di forza, 3 debolezze e 2-3 assunzioni implicite
 - Le best practice devono essere collegate ai problemi specifici del prompt
-- Rispondi SOLO con JSON valido, nessun testo aggiuntivo prima o dopo`;
+- Rispondi SOLO con JSON valido, nessun testo aggiuntivo prima o dopo
+
+REGOLA CRITICA - COERENZA TRA SEZIONI:
+Le tecnologie specificate nell'array "technologies" DEVONO essere IDENTICHE a quelle nell'array "architecture". 
+Per garantire la coerenza:
+1. Prima definisci le tecnologie nell'array "technologies"
+2. Poi usa ESATTAMENTE gli stessi nomi in "architecture":
+   - technologies[category="Frontend"].primary.name === architecture[componente frontend].technology
+   - technologies[category="Backend"].primary.name === architecture[componente backend/api].technology
+   - technologies[category="Database"].primary.name === architecture[componente database].technology
+   - technologies[category="Autenticazione"].primary.name === architecture[componente auth].technology
+3. NON usare varianti (es. "React" vs "React + Vite", oppure "Next.js" vs "Next.js (App Router)")
+4. Scegli UN nome per ogni tecnologia e usalo IDENTICAMENTE in entrambe le sezioni`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
