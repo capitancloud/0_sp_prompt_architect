@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
-import { Zap, Code2, Sparkles } from "lucide-react";
+import { Zap, Code2, Sparkles, LogIn, LogOut, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
+  const { user, signOut, loading } = useAuth();
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
@@ -9,6 +14,38 @@ export function Header() {
       transition={{ duration: 0.5 }}
       className="relative py-8 px-4"
     >
+      {/* Auth buttons - top right */}
+      <div className="absolute top-4 right-4 z-20">
+        {!loading && (
+          <>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted-foreground flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  {user.email}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => signOut()}
+                  className="gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Esci
+                </Button>
+              </div>
+            ) : (
+              <Link to="/auth">
+                <Button variant="glow" size="sm" className="gap-2">
+                  <LogIn className="w-4 h-4" />
+                  Accedi
+                </Button>
+              </Link>
+            )}
+          </>
+        )}
+      </div>
+
       <div className="max-w-4xl mx-auto text-center">
         <motion.div
           initial={{ scale: 0.9 }}
