@@ -69,7 +69,7 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
               <span className={`text-xs font-medium uppercase tracking-wider ${colors.text}`}>
                 {tech.category}
               </span>
-              <h3 className="text-lg font-bold text-foreground">{tech.primary.name}</h3>
+              <h3 className="text-lg font-bold text-foreground">{tech.primary?.name || "N/A"}</h3>
             </div>
           </div>
           <button
@@ -93,7 +93,7 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
                 Perché questa scelta?
               </h4>
               <p className="text-sm text-foreground leading-relaxed">
-                {tech.primary.reason}
+                {tech.primary?.reason || "Motivazione non specificata"}
               </p>
             </div>
           </div>
@@ -106,7 +106,7 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
               <Check className="w-3.5 h-3.5" /> Vantaggi
             </h4>
             <ul className="space-y-2">
-              {tech.primary.pros.map((pro, i) => (
+              {(tech.primary?.pros || []).map((pro, i) => (
                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                   <span className="text-success mt-1 flex-shrink-0">•</span>
                   <span>{pro}</span>
@@ -120,7 +120,7 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
               <X className="w-3.5 h-3.5" /> Svantaggi
             </h4>
             <ul className="space-y-2">
-              {tech.primary.cons.map((con, i) => (
+              {(tech.primary?.cons || []).map((con, i) => (
                 <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                   <span className="text-destructive mt-1 flex-shrink-0">•</span>
                   <span>{con}</span>
@@ -144,7 +144,7 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
                 <Target className="w-3.5 h-3.5 text-primary" /> Casi d'uso ideali
               </h4>
               <div className="grid sm:grid-cols-2 gap-2">
-                {getCasesForTech(tech.primary.name).map((useCase, i) => (
+                {getCasesForTech(tech.primary?.name || "").map((useCase, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Zap className="w-3 h-3 text-primary" />
                     <span>{useCase}</span>
@@ -162,15 +162,15 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
                 <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div 
                     className={`h-full bg-gradient-to-r ${colors.gradient} transition-all`}
-                    style={{ width: getLearningCurve(tech.primary.name) }}
+                    style={{ width: getLearningCurve(tech.primary?.name || "") }}
                   />
                 </div>
                 <span className="text-xs text-muted-foreground w-16 text-right">
-                  {getLearningCurveLabel(tech.primary.name)}
+                  {getLearningCurveLabel(tech.primary?.name || "")}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                {getLearningCurveDescription(tech.primary.name)}
+                {getLearningCurveDescription(tech.primary?.name || "")}
               </p>
             </div>
 
@@ -180,7 +180,7 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
                 <AlertCircle className="w-3.5 h-3.5" /> Errori comuni da evitare
               </h4>
               <ul className="space-y-2">
-                {getPitfallsForTech(tech.primary.name).map((pitfall, i) => (
+                {getPitfallsForTech(tech.primary?.name || "").map((pitfall, i) => (
                   <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                     <span className="text-warning mt-1">⚠️</span>
                     <span>{pitfall}</span>
@@ -192,55 +192,57 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
         )}
         
         {/* Alternative Section */}
-        <div className="mt-4 pt-4 border-t border-border/50">
-          <div className="flex items-center gap-2 mb-3">
-            <Scale className="w-4 h-4 text-accent" />
-            <span className="text-sm font-semibold text-foreground">Alternativa: </span>
-            <span className={`font-bold ${colors.text}`}>{tech.alternative.name}</span>
-          </div>
-          
-          <div className="p-3 rounded-lg bg-accent/5 border border-accent/20">
-            <p className="text-sm text-muted-foreground mb-2">
-              <strong className="text-foreground">Quando sceglierla:</strong> {tech.alternative.whenToUse}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              <strong className="text-foreground">Motivazione:</strong> {tech.alternative.reason}
-            </p>
-          </div>
-          
-          {/* Comparison Table (only when expanded) */}
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-4"
-            >
-              <h5 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
-                <ArrowRight className="w-3 h-3 text-primary" /> Confronto diretto
-              </h5>
-              <div className="overflow-hidden rounded-lg border border-border">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-muted/30">
-                      <th className="text-left p-2 text-xs font-medium text-muted-foreground">Aspetto</th>
-                      <th className="text-center p-2 text-xs font-medium text-primary">{tech.primary.name}</th>
-                      <th className="text-center p-2 text-xs font-medium text-accent">{tech.alternative.name}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getComparisonData(tech.primary.name, tech.alternative.name).map((row, i) => (
-                      <tr key={i} className="border-t border-border/50">
-                        <td className="p-2 text-muted-foreground">{row.aspect}</td>
-                        <td className="p-2 text-center">{row.primary}</td>
-                        <td className="p-2 text-center">{row.alternative}</td>
+        {tech.alternative && (
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <div className="flex items-center gap-2 mb-3">
+              <Scale className="w-4 h-4 text-accent" />
+              <span className="text-sm font-semibold text-foreground">Alternativa: </span>
+              <span className={`font-bold ${colors.text}`}>{tech.alternative.name || "N/A"}</span>
+            </div>
+            
+            <div className="p-3 rounded-lg bg-accent/5 border border-accent/20">
+              <p className="text-sm text-muted-foreground mb-2">
+                <strong className="text-foreground">Quando sceglierla:</strong> {tech.alternative.whenToUse || "Non specificato"}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                <strong className="text-foreground">Motivazione:</strong> {tech.alternative.reason || "Non specificata"}
+              </p>
+            </div>
+            
+            {/* Comparison Table (only when expanded) */}
+            {isExpanded && tech.primary?.name && tech.alternative?.name && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-4"
+              >
+                <h5 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-primary" /> Confronto diretto
+                </h5>
+                <div className="overflow-hidden rounded-lg border border-border">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-muted/30">
+                        <th className="text-left p-2 text-xs font-medium text-muted-foreground">Aspetto</th>
+                        <th className="text-center p-2 text-xs font-medium text-primary">{tech.primary.name}</th>
+                        <th className="text-center p-2 text-xs font-medium text-accent">{tech.alternative.name}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
-          )}
-        </div>
+                    </thead>
+                    <tbody>
+                      {getComparisonData(tech.primary.name, tech.alternative.name).map((row, i) => (
+                        <tr key={i} className="border-t border-border/50">
+                          <td className="p-2 text-muted-foreground">{row.aspect}</td>
+                          <td className="p-2 text-center">{row.primary}</td>
+                          <td className="p-2 text-center">{row.alternative}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        )}
       </div>
     </motion.div>
   );
