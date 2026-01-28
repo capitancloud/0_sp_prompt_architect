@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArchitectureComponent } from "@/types/analysis";
+import { TechnologySuggestion } from "@/types/analysis";
 import { 
   CheckCircle2, 
   Circle, 
@@ -14,13 +14,14 @@ import {
   Database,
   Globe,
   Server,
-  Layers
+  Layers,
+  Palette
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-interface ImplementationRoadmapProps {
-  components: ArchitectureComponent[];
+interface ImplementationRoadmapFromStackProps {
+  technologies: TechnologySuggestion[];
 }
 
 interface Milestone {
@@ -35,13 +36,17 @@ interface Milestone {
   risks: string[];
   icon: React.ReactNode;
   color: string;
+  technology?: string;
 }
 
-// Generate milestones based on architecture components
-const generateMilestones = (components: ArchitectureComponent[]): Milestone[] => {
+// Generate milestones based on technology stack
+const generateMilestones = (technologies: TechnologySuggestion[]): Milestone[] => {
   const milestones: Milestone[] = [];
   
+  const getTech = (category: string) => technologies.find(t => t.category === category);
+  
   // Phase 0: Setup & Planning
+  const hostingTech = getTech("Hosting");
   milestones.push({
     id: "setup",
     phase: 0,
@@ -53,7 +58,7 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       "Configurare l'ambiente di sviluppo",
       "Definire la struttura delle cartelle",
       "Configurare ESLint, Prettier e TypeScript",
-      "Creare il documento di architettura"
+      hostingTech ? `Configurare ${hostingTech.primary.name} per il deployment` : "Scegliere la piattaforma di hosting"
     ],
     dependencies: [],
     deliverables: [
@@ -63,40 +68,25 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
     ],
     risks: [],
     icon: <GitBranch className="w-5 h-5" />,
-    color: "from-slate-500 to-gray-600"
+    color: "from-slate-500 to-gray-600",
+    technology: hostingTech?.primary.name
   });
 
-  // Phase 1: Database & Auth (if present)
-  const hasDatabase = components.some(c => 
-    c.name.toLowerCase().includes('database') || 
-    c.name.toLowerCase().includes('db') ||
-    c.technology.toLowerCase().includes('postgres') ||
-    c.technology.toLowerCase().includes('supabase')
-  );
-  
-  const hasAuth = components.some(c => 
-    c.name.toLowerCase().includes('auth') || 
-    c.name.toLowerCase().includes('identity')
-  );
-
-  if (hasDatabase) {
-    const dbComponent = components.find(c => 
-      c.name.toLowerCase().includes('database') || 
-      c.name.toLowerCase().includes('db')
-    );
-    
+  // Phase 1: Database
+  const dbTech = getTech("Database");
+  if (dbTech) {
     milestones.push({
       id: "database",
       phase: 1,
       title: "Database & Schema",
-      description: "Progettazione e implementazione dello schema del database",
+      description: `Configurazione di ${dbTech.primary.name} e progettazione dello schema`,
       duration: "2-3 giorni",
       tasks: [
+        `Configurare ${dbTech.primary.name}`,
         "Progettare lo schema ER del database",
         "Creare le tabelle principali",
         "Definire le relazioni tra entità",
-        "Implementare le migrazioni",
-        "Configurare i backup automatici"
+        "Implementare le migrazioni"
       ],
       dependencies: ["setup"],
       deliverables: [
@@ -106,28 +96,31 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       ],
       risks: [
         "Schema non normalizzato potrebbe causare problemi futuri",
-        "Mancanza di indici può degradare le performance"
+        ...dbTech.primary.cons.slice(0, 1)
       ],
       icon: <Database className="w-5 h-5" />,
-      color: "from-amber-500 to-orange-600"
+      color: "from-amber-500 to-orange-600",
+      technology: dbTech.primary.name
     });
   }
 
-  if (hasAuth) {
+  // Phase 2: Authentication
+  const authTech = getTech("Autenticazione");
+  if (authTech) {
     milestones.push({
       id: "auth",
-      phase: hasDatabase ? 2 : 1,
+      phase: 2,
       title: "Autenticazione & Sicurezza",
-      description: "Implementazione del sistema di autenticazione e autorizzazione",
+      description: `Implementazione di ${authTech.primary.name} per la gestione utenti`,
       duration: "2-4 giorni",
       tasks: [
-        "Configurare il provider di autenticazione",
+        `Configurare ${authTech.primary.name}`,
         "Implementare login/registrazione",
         "Gestire i token JWT",
         "Implementare Row Level Security (RLS)",
         "Configurare i ruoli utente"
       ],
-      dependencies: hasDatabase ? ["database"] : ["setup"],
+      dependencies: dbTech ? ["database"] : ["setup"],
       deliverables: [
         "Sistema di login funzionante",
         "Protezione delle route",
@@ -135,75 +128,64 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       ],
       risks: [
         "RLS policies non testate possono esporre dati sensibili",
-        "Token non gestiti correttamente creano vulnerabilità"
+        ...authTech.primary.cons.slice(0, 1)
       ],
       icon: <Shield className="w-5 h-5" />,
-      color: "from-emerald-500 to-green-600"
+      color: "from-emerald-500 to-green-600",
+      technology: authTech.primary.name
     });
   }
 
-  // Phase 2/3: Backend/API
-  const hasBackend = components.some(c => 
-    c.name.toLowerCase().includes('backend') || 
-    c.name.toLowerCase().includes('api') ||
-    c.name.toLowerCase().includes('server') ||
-    c.name.toLowerCase().includes('edge')
-  );
-
-  if (hasBackend) {
-    const backendPhase = milestones.length;
+  // Phase 3: Backend
+  const backendTech = getTech("Backend");
+  if (backendTech) {
     milestones.push({
       id: "backend",
-      phase: backendPhase,
+      phase: 3,
       title: "Backend & API",
-      description: "Sviluppo delle API e della logica di business",
+      description: `Sviluppo delle API con ${backendTech.primary.name}`,
       duration: "3-5 giorni",
       tasks: [
+        `Configurare ${backendTech.primary.name}`,
         "Definire gli endpoint API",
         "Implementare la validazione input",
         "Creare i controller/handler",
-        "Implementare la gestione errori",
-        "Scrivere i test API"
+        "Implementare la gestione errori"
       ],
-      dependencies: hasAuth ? ["auth"] : hasDatabase ? ["database"] : ["setup"],
+      dependencies: authTech ? ["auth"] : dbTech ? ["database"] : ["setup"],
       deliverables: [
-        "API documentate (OpenAPI/Swagger)",
+        "API documentate",
         "Test coverage > 80%",
         "Error handling robusto"
       ],
       risks: [
         "API non versionata può rompere i client",
-        "Mancanza di rate limiting espone a DoS"
+        ...backendTech.primary.cons.slice(0, 1)
       ],
       icon: <Server className="w-5 h-5" />,
-      color: "from-violet-500 to-purple-600"
+      color: "from-violet-500 to-purple-600",
+      technology: backendTech.primary.name
     });
   }
 
-  // Phase 3/4: Frontend Core
-  const hasFrontend = components.some(c => 
-    c.name.toLowerCase().includes('frontend') || 
-    c.name.toLowerCase().includes('ui') ||
-    c.technology.toLowerCase().includes('react') ||
-    c.technology.toLowerCase().includes('next')
-  );
-
-  if (hasFrontend) {
-    const frontendPhase = milestones.length;
+  // Phase 4: Frontend + Styling
+  const frontendTech = getTech("Frontend");
+  const stylingTech = getTech("Styling");
+  if (frontendTech) {
     milestones.push({
       id: "frontend-core",
-      phase: frontendPhase,
-      title: "Frontend Core",
-      description: "Sviluppo dell'interfaccia utente principale",
+      phase: 4,
+      title: "Frontend & Design System",
+      description: `Sviluppo dell'interfaccia con ${frontendTech.primary.name} e ${stylingTech?.primary.name || 'CSS'}`,
       duration: "4-7 giorni",
       tasks: [
-        "Configurare il design system",
+        `Configurare ${frontendTech.primary.name}`,
+        stylingTech ? `Integrare ${stylingTech.primary.name}` : "Configurare il sistema CSS",
         "Creare i componenti base (Button, Input, Card...)",
         "Implementare il layout principale",
-        "Configurare il routing",
-        "Implementare la gestione dello stato"
+        "Configurare il routing"
       ],
-      dependencies: hasBackend ? ["backend"] : hasAuth ? ["auth"] : ["setup"],
+      dependencies: backendTech ? ["backend"] : authTech ? ["auth"] : ["setup"],
       deliverables: [
         "Design system documentato",
         "Componenti riutilizzabili",
@@ -211,18 +193,18 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       ],
       risks: [
         "Componenti non accessibili escludono utenti",
-        "Performance scarse su mobile"
+        ...frontendTech.primary.cons.slice(0, 1)
       ],
       icon: <Globe className="w-5 h-5" />,
-      color: "from-cyan-500 to-blue-600"
+      color: "from-cyan-500 to-blue-600",
+      technology: `${frontendTech.primary.name} + ${stylingTech?.primary.name || 'CSS'}`
     });
   }
 
-  // Phase 4/5: Features
-  const featuresPhase = milestones.length;
+  // Phase 5: Features
   milestones.push({
     id: "features",
-    phase: featuresPhase,
+    phase: 5,
     title: "Feature Principali",
     description: "Implementazione delle funzionalità core dell'applicazione",
     duration: "5-10 giorni",
@@ -233,7 +215,7 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       "Implementare feedback utente (toast, loading...)",
       "Ottimizzare le performance"
     ],
-    dependencies: hasFrontend ? ["frontend-core"] : hasBackend ? ["backend"] : ["setup"],
+    dependencies: frontendTech ? ["frontend-core"] : backendTech ? ["backend"] : ["setup"],
     deliverables: [
       "MVP funzionante",
       "User flow completi",
@@ -247,11 +229,10 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
     color: "from-pink-500 to-rose-600"
   });
 
-  // Phase 5/6: Testing & QA
-  const testingPhase = milestones.length;
+  // Phase 6: Testing
   milestones.push({
     id: "testing",
-    phase: testingPhase,
+    phase: 6,
     title: "Testing & QA",
     description: "Test approfonditi e controllo qualità",
     duration: "2-4 giorni",
@@ -269,20 +250,18 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       "0 vulnerabilità critiche"
     ],
     risks: [
-      "Test insufficienti portano bug in produzione",
-      "Mancanza di monitoring post-rilascio"
+      "Test insufficienti portano bug in produzione"
     ],
     icon: <Target className="w-5 h-5" />,
     color: "from-indigo-500 to-blue-600"
   });
 
-  // Phase 6/7: Deploy
-  const deployPhase = milestones.length;
+  // Phase 7: Deploy
   milestones.push({
     id: "deploy",
-    phase: deployPhase,
+    phase: 7,
     title: "Deploy & Lancio",
-    description: "Deployment in produzione e go-live",
+    description: `Deployment su ${hostingTech?.primary.name || 'produzione'} e go-live`,
     duration: "1-2 giorni",
     tasks: [
       "Configurare il CI/CD",
@@ -302,14 +281,15 @@ const generateMilestones = (components: ArchitectureComponent[]): Milestone[] =>
       "Configurazioni diverse tra staging e prod"
     ],
     icon: <Rocket className="w-5 h-5" />,
-    color: "from-green-500 to-emerald-600"
+    color: "from-green-500 to-emerald-600",
+    technology: hostingTech?.primary.name
   });
 
   return milestones;
 };
 
-export function ImplementationRoadmap({ components }: ImplementationRoadmapProps) {
-  const milestones = generateMilestones(components);
+export function ImplementationRoadmapFromStack({ technologies }: ImplementationRoadmapFromStackProps) {
+  const milestones = generateMilestones(technologies);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [completedPhases, setCompletedPhases] = useState<Set<string>>(new Set());
 
@@ -347,7 +327,7 @@ export function ImplementationRoadmap({ components }: ImplementationRoadmapProps
           <div>
             <h2 className="text-xl font-bold gradient-text">Roadmap di Implementazione</h2>
             <p className="text-sm text-muted-foreground">
-              Piano d'azione con milestone, dipendenze e tempistiche
+              Piano basato sul tuo stack: {technologies.map(t => t.primary.name).join(', ')}
             </p>
           </div>
         </div>
@@ -431,6 +411,11 @@ export function ImplementationRoadmap({ components }: ImplementationRoadmapProps
                       <span className="text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
                         Fase {milestone.phase}
                       </span>
+                      {milestone.technology && (
+                        <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-0.5 rounded">
+                          {milestone.technology}
+                        </span>
+                      )}
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {milestone.duration}
@@ -498,9 +483,9 @@ export function ImplementationRoadmap({ components }: ImplementationRoadmapProps
                       <div className="p-3 rounded-lg bg-muted/30">
                         <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
                           <Circle className="w-3 h-3 text-primary" />
-                          Task da completare
+                          Task
                         </h4>
-                        <ul className="space-y-1.5">
+                        <ul className="space-y-1">
                           {milestone.tasks.map((task, i) => (
                             <li key={i} className="text-xs text-muted-foreground flex items-start gap-2">
                               <span className="text-primary mt-0.5">•</span>
@@ -514,13 +499,13 @@ export function ImplementationRoadmap({ components }: ImplementationRoadmapProps
                       <div className="p-3 rounded-lg bg-success/5 border border-success/20">
                         <h4 className="text-xs font-semibold text-success mb-2 flex items-center gap-1.5">
                           <CheckCircle2 className="w-3 h-3" />
-                          Deliverable attesi
+                          Deliverables
                         </h4>
-                        <ul className="space-y-1.5">
-                          {milestone.deliverables.map((item, i) => (
+                        <ul className="space-y-1">
+                          {milestone.deliverables.map((del, i) => (
                             <li key={i} className="text-xs text-muted-foreground flex items-start gap-2">
-                              <Zap className="w-3 h-3 text-success mt-0.5 flex-shrink-0" />
-                              <span>{item}</span>
+                              <span className="text-success mt-0.5">✓</span>
+                              <span>{del}</span>
                             </li>
                           ))}
                         </ul>
@@ -531,12 +516,12 @@ export function ImplementationRoadmap({ components }: ImplementationRoadmapProps
                         <div className="p-3 rounded-lg bg-warning/5 border border-warning/20">
                           <h4 className="text-xs font-semibold text-warning mb-2 flex items-center gap-1.5">
                             <AlertTriangle className="w-3 h-3" />
-                            Rischi da monitorare
+                            Rischi
                           </h4>
-                          <ul className="space-y-1.5">
+                          <ul className="space-y-1">
                             {milestone.risks.map((risk, i) => (
                               <li key={i} className="text-xs text-muted-foreground flex items-start gap-2">
-                                <span className="text-warning mt-0.5">⚠️</span>
+                                <span className="text-warning mt-0.5">⚠</span>
                                 <span>{risk}</span>
                               </li>
                             ))}
@@ -551,37 +536,6 @@ export function ImplementationRoadmap({ components }: ImplementationRoadmapProps
           );
         })}
       </div>
-
-      {/* Tips */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="mt-6 p-4 rounded-lg bg-primary/5 border border-primary/20"
-      >
-        <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-          <Zap className="w-4 h-4 text-primary" />
-          Suggerimenti per il successo
-        </h4>
-        <ul className="grid sm:grid-cols-2 gap-2 text-xs text-muted-foreground">
-          <li className="flex items-start gap-2">
-            <span className="text-primary">•</span>
-            Completa ogni fase prima di passare alla successiva
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary">•</span>
-            Scrivi test mentre sviluppi, non alla fine
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary">•</span>
-            Fai deploy in staging frequentemente
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary">•</span>
-            Documenta le decisioni architetturali
-          </li>
-        </ul>
-      </motion.div>
     </motion.div>
   );
 }

@@ -1,76 +1,74 @@
 import { motion } from "framer-motion";
-import { ArchitectureComponent } from "@/types/analysis";
+import { TechnologySuggestion } from "@/types/analysis";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, Check, Info, ArrowRight, Zap } from "lucide-react";
 
-interface ArchitectureDiagramEnhancedProps {
-  components: ArchitectureComponent[];
+interface ArchitectureDiagramFromStackProps {
+  technologies: TechnologySuggestion[];
 }
 
-// Color palette for different component types
-const getComponentStyle = (name: string, technology: string) => {
-  const lowerName = name.toLowerCase();
-  const lowerTech = technology.toLowerCase();
+// Color palette for different categories
+const getCategoryStyle = (category: string) => {
+  const lower = category.toLowerCase();
   
-  if (lowerName.includes('frontend') || lowerName.includes('next') || lowerName.includes('react') || lowerTech.includes('react')) {
+  if (lower === "frontend") {
     return { gradient: "from-cyan-500 to-blue-600", bgColor: "bg-cyan-500/10", borderColor: "border-cyan-500/30", textColor: "text-cyan-400" };
   }
-  if (lowerName.includes('auth') || lowerName.includes('identity')) {
-    return { gradient: "from-emerald-500 to-green-600", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-500/30", textColor: "text-emerald-400" };
-  }
-  if (lowerName.includes('database') || lowerName.includes('db') || lowerTech.includes('postgres')) {
-    return { gradient: "from-amber-500 to-orange-600", bgColor: "bg-amber-500/10", borderColor: "border-amber-500/30", textColor: "text-amber-400" };
-  }
-  if (lowerName.includes('backend') || lowerName.includes('api') || lowerName.includes('edge') || lowerName.includes('server')) {
-    return { gradient: "from-violet-500 to-purple-600", bgColor: "bg-violet-500/10", borderColor: "border-violet-500/30", textColor: "text-violet-400" };
-  }
-  if (lowerName.includes('storage') || lowerName.includes('file') || lowerName.includes('cdn')) {
+  if (lower === "styling") {
     return { gradient: "from-pink-500 to-rose-600", bgColor: "bg-pink-500/10", borderColor: "border-pink-500/30", textColor: "text-pink-400" };
   }
-  if (lowerName.includes('cache') || lowerName.includes('redis')) {
-    return { gradient: "from-red-500 to-orange-600", bgColor: "bg-red-500/10", borderColor: "border-red-500/30", textColor: "text-red-400" };
+  if (lower === "backend") {
+    return { gradient: "from-violet-500 to-purple-600", bgColor: "bg-violet-500/10", borderColor: "border-violet-500/30", textColor: "text-violet-400" };
+  }
+  if (lower === "database") {
+    return { gradient: "from-amber-500 to-orange-600", bgColor: "bg-amber-500/10", borderColor: "border-amber-500/30", textColor: "text-amber-400" };
+  }
+  if (lower === "autenticazione") {
+    return { gradient: "from-emerald-500 to-green-600", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-500/30", textColor: "text-emerald-400" };
+  }
+  if (lower === "hosting") {
+    return { gradient: "from-indigo-500 to-blue-600", bgColor: "bg-indigo-500/10", borderColor: "border-indigo-500/30", textColor: "text-indigo-400" };
   }
   return { gradient: "from-primary to-primary-glow", bgColor: "bg-primary/10", borderColor: "border-primary/30", textColor: "text-primary" };
 };
 
-// Categorize components into layers
-const categorizeComponents = (components: ArchitectureComponent[]) => {
-  const layers: Record<string, ArchitectureComponent[]> = {
+// Categorize technologies into layers for visual organization
+const categorizeTechnologies = (technologies: TechnologySuggestion[]) => {
+  const layers: Record<string, TechnologySuggestion[]> = {
     "Presentation Layer": [],
     "Application Layer": [],
     "Data Layer": [],
     "Infrastructure": []
   };
 
-  components.forEach(comp => {
-    const lowerName = comp.name.toLowerCase();
-    const lowerTech = comp.technology.toLowerCase();
+  technologies.forEach(tech => {
+    const category = tech.category.toLowerCase();
     
-    if (lowerName.includes('frontend') || lowerName.includes('next') || lowerName.includes('react') || lowerTech.includes('react')) {
-      layers["Presentation Layer"].push(comp);
-    } else if (lowerName.includes('auth') || lowerName.includes('api') || lowerName.includes('backend') || lowerName.includes('edge') || lowerName.includes('server')) {
-      layers["Application Layer"].push(comp);
-    } else if (lowerName.includes('database') || lowerName.includes('db') || lowerName.includes('storage') || lowerName.includes('cache')) {
-      layers["Data Layer"].push(comp);
-    } else {
-      layers["Infrastructure"].push(comp);
+    if (category === "frontend" || category === "styling") {
+      layers["Presentation Layer"].push(tech);
+    } else if (category === "backend" || category === "autenticazione") {
+      layers["Application Layer"].push(tech);
+    } else if (category === "database") {
+      layers["Data Layer"].push(tech);
+    } else if (category === "hosting") {
+      layers["Infrastructure"].push(tech);
     }
   });
 
   return layers;
 };
 
-export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramEnhancedProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = components.find(c => c.id === selectedId);
-  const layers = categorizeComponents(components);
+export function ArchitectureDiagramFromStack({ technologies }: ArchitectureDiagramFromStackProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const selected = technologies.find(t => t.category === selectedCategory);
+  const layers = categorizeTechnologies(technologies);
 
   const layerLabels: Record<string, { icon: string; description: string }> = {
     "Presentation Layer": { icon: "🎨", description: "Ciò che l'utente vede e tocca" },
     "Application Layer": { icon: "⚙️", description: "La logica e l'elaborazione dei dati" },
     "Data Layer": { icon: "💾", description: "Dove i dati vengono conservati" },
-    "Infrastructure": { icon: "🌐", description: "Servizi di supporto e infrastruttura" }
+    "Infrastructure": { icon: "🌐", description: "Servizi di supporto e deployment" }
   };
 
   return (
@@ -82,14 +80,14 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
     >
       <h2 className="text-xl font-bold gradient-text mb-2">Diagramma Architettura Completo</h2>
       <p className="text-sm text-muted-foreground mb-6">
-        Visualizzazione interattiva di tutti i componenti e le loro connessioni
+        Visualizzazione interattiva dei 6 blocchi dello stack tecnologico organizzati per layer
       </p>
       
       <div className="flex flex-col xl:flex-row gap-6">
         {/* Layered Architecture Diagram */}
         <div className="flex-1 space-y-4">
-          {Object.entries(layers).map(([layerName, layerComponents], layerIndex) => {
-            if (layerComponents.length === 0) return null;
+          {Object.entries(layers).map(([layerName, layerTechs], layerIndex) => {
+            if (layerTechs.length === 0) return null;
             
             return (
               <motion.div
@@ -106,20 +104,20 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
                   <span className="text-xs text-muted-foreground">— {layerLabels[layerName]?.description}</span>
                 </div>
 
-                {/* Components in this layer */}
+                {/* Technologies in this layer */}
                 <div className="relative p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {layerComponents.map((comp, index) => {
-                      const style = getComponentStyle(comp.name, comp.technology);
-                      const isSelected = selectedId === comp.id;
+                    {layerTechs.map((tech, index) => {
+                      const style = getCategoryStyle(tech.category);
+                      const isSelected = selectedCategory === tech.category;
                       
                       return (
                         <motion.div
-                          key={comp.id}
+                          key={tech.category}
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.3, delay: index * 0.05 }}
-                          onClick={() => setSelectedId(isSelected ? null : comp.id)}
+                          onClick={() => setSelectedCategory(isSelected ? null : tech.category)}
                           className={cn(
                             "relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-300",
                             "hover:shadow-lg hover:scale-[1.02]",
@@ -132,23 +130,13 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
                           <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-md bg-gradient-to-r ${style.gradient}`} />
                           
                           <div className="pt-1">
-                            <h4 className="font-semibold text-foreground text-sm mb-1">{comp.name}</h4>
-                            <p className={`text-xs font-mono ${style.textColor} mb-2`}>{comp.technology}</p>
-                            <p className="text-xs text-muted-foreground line-clamp-2">{comp.role}</p>
+                            <h4 className="font-semibold text-foreground text-sm mb-1">{tech.category}</h4>
+                            <p className={`text-xs font-mono ${style.textColor} mb-2`}>{tech.primary.name}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2">{tech.primary.reason}</p>
                           </div>
 
-                          {/* Connection indicators */}
-                          {comp.connections.length > 0 && (
-                            <div className="mt-3 pt-2 border-t border-border/30">
-                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                <ArrowRight className="w-3 h-3" />
-                                <span>{comp.connections.length} connessioni</span>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Risk indicator */}
-                          {comp.risks.length > 0 && (
+                          {/* Pros/Cons indicator */}
+                          {tech.primary.cons.length > 0 && (
                             <div className="absolute top-3 right-3">
                               <div className="p-1 rounded-full bg-warning/20">
                                 <AlertTriangle className="w-3 h-3 text-warning" />
@@ -162,7 +150,7 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
                 </div>
 
                 {/* Arrow between layers */}
-                {layerIndex < Object.entries(layers).filter(([_, comps]) => comps.length > 0).length - 1 && (
+                {layerIndex < Object.entries(layers).filter(([_, techs]) => techs.length > 0).length - 1 && (
                   <div className="flex justify-center py-2">
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -184,10 +172,10 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
         {/* Details panel */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: selectedId ? 1 : 0.7, x: 0 }}
+          animate={{ opacity: selectedCategory ? 1 : 0.7, x: 0 }}
           className={cn(
             "w-full xl:w-96 rounded-xl border transition-all duration-300 sticky top-4",
-            selectedId 
+            selectedCategory 
               ? "bg-card border-primary/30 shadow-lg shadow-primary/5" 
               : "bg-card/50 border-border/50"
           )}
@@ -197,81 +185,72 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground">{selected.name}</h3>
-                  <p className={`text-sm font-mono ${getComponentStyle(selected.name, selected.technology).textColor}`}>
-                    {selected.technology}
+                  <h3 className="text-lg font-semibold text-foreground">{selected.category}</h3>
+                  <p className={`text-sm font-mono ${getCategoryStyle(selected.category).textColor}`}>
+                    {selected.primary.name}
                   </p>
                 </div>
-                <div className={`p-2 rounded-lg bg-gradient-to-br ${getComponentStyle(selected.name, selected.technology).gradient}`}>
+                <div className={`p-2 rounded-lg bg-gradient-to-br ${getCategoryStyle(selected.category).gradient}`}>
                   <Check className="w-4 h-4 text-white" />
                 </div>
               </div>
               
               <div className="space-y-4">
-                {/* Role */}
+                {/* Reason */}
                 <div className="p-3 rounded-lg bg-muted/30">
                   <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
                     <Info className="w-3 h-3" />
-                    Ruolo nel Sistema
-                  </h4>
-                  <p className="text-sm text-foreground">{selected.role}</p>
-                </div>
-                
-                {/* Reason */}
-                <div className="p-3 rounded-lg bg-primary/5 border border-primary/10">
-                  <h4 className="text-xs font-medium text-primary uppercase tracking-wider mb-2">
                     Perché questa scelta?
                   </h4>
-                  <p className="text-sm text-foreground">{selected.reason}</p>
+                  <p className="text-sm text-foreground">{selected.primary.reason}</p>
                 </div>
                 
-                {/* Connections */}
-                {selected.connections.length > 0 && (
-                  <div>
-                    <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-                      Connesso a
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selected.connections.map((connId) => {
-                        const connComp = components.find(c => c.id === connId);
-                        if (!connComp) return null;
-                        const style = getComponentStyle(connComp.name, connComp.technology);
-                        return (
-                          <button
-                            key={connId}
-                            onClick={() => setSelectedId(connId)}
-                            className={cn(
-                              "px-3 py-1 rounded-full text-xs font-medium transition-all",
-                              style.bgColor,
-                              style.textColor,
-                              "hover:scale-105"
-                            )}
-                          >
-                            {connComp.name}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Risks */}
-                {selected.risks.length > 0 && (
-                  <div className="p-3 rounded-lg bg-warning/5 border border-warning/20">
-                    <h4 className="text-xs font-medium text-warning uppercase tracking-wider mb-2 flex items-center gap-1">
-                      <AlertTriangle className="w-3 h-3" />
-                      Potenziali Rischi
+                {/* Pros */}
+                {selected.primary.pros.length > 0 && (
+                  <div className="p-3 rounded-lg bg-success/5 border border-success/20">
+                    <h4 className="text-xs font-medium text-success uppercase tracking-wider mb-2">
+                      Vantaggi
                     </h4>
                     <ul className="space-y-1">
-                      {selected.risks.map((risk, i) => (
+                      {selected.primary.pros.map((pro, i) => (
                         <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                          <span className="text-warning mt-1">•</span>
-                          <span>{risk}</span>
+                          <span className="text-success mt-1">✓</span>
+                          <span>{pro}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
+                
+                {/* Cons */}
+                {selected.primary.cons.length > 0 && (
+                  <div className="p-3 rounded-lg bg-warning/5 border border-warning/20">
+                    <h4 className="text-xs font-medium text-warning uppercase tracking-wider mb-2 flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3" />
+                      Potenziali Svantaggi
+                    </h4>
+                    <ul className="space-y-1">
+                      {selected.primary.cons.map((con, i) => (
+                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                          <span className="text-warning mt-1">•</span>
+                          <span>{con}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Alternative */}
+                <div className="p-3 rounded-lg bg-primary/5 border border-primary/10">
+                  <h4 className="text-xs font-medium text-primary uppercase tracking-wider mb-2 flex items-center gap-1">
+                    <ArrowRight className="w-3 h-3" />
+                    Alternativa: {selected.alternative.name}
+                  </h4>
+                  <p className="text-sm text-muted-foreground mb-2">{selected.alternative.reason}</p>
+                  <p className="text-xs text-muted-foreground/80 italic">
+                    Quando usarla: {selected.alternative.whenToUse}
+                  </p>
+                </div>
               </div>
             </div>
           ) : (
@@ -306,20 +285,24 @@ export function ArchitectureDiagramEnhanced({ components }: ArchitectureDiagramE
             <span>Frontend</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-gradient-to-r from-violet-500 to-purple-600" />
-            <span>Backend/API</span>
+            <div className="w-3 h-3 rounded bg-gradient-to-r from-pink-500 to-rose-600" />
+            <span>Styling</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-gradient-to-r from-emerald-500 to-green-600" />
-            <span>Autenticazione</span>
+            <div className="w-3 h-3 rounded bg-gradient-to-r from-violet-500 to-purple-600" />
+            <span>Backend</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-gradient-to-r from-amber-500 to-orange-600" />
             <span>Database</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-gradient-to-r from-pink-500 to-rose-600" />
-            <span>Storage</span>
+            <div className="w-3 h-3 rounded bg-gradient-to-r from-emerald-500 to-green-600" />
+            <span>Autenticazione</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-gradient-to-r from-indigo-500 to-blue-600" />
+            <span>Hosting</span>
           </div>
         </div>
       </motion.div>
