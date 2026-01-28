@@ -62,20 +62,20 @@ export function SimplifiedArchitectureFromStack({ technologies }: SimplifiedArch
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-card p-6"
+      className="glass-card p-4 md:p-6"
     >
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <Lightbulb className="w-5 h-5 text-primary" />
+      <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+        <div className="p-1.5 md:p-2 rounded-lg bg-primary/10">
+          <Lightbulb className="w-4 h-4 md:w-5 md:h-5 text-primary" />
         </div>
         <div>
-          <h2 className="text-xl font-bold gradient-text">Architettura Spiegata Semplice</h2>
-          <p className="text-sm text-muted-foreground">Come funziona la tua app, spiegato come a un amico</p>
+          <h2 className="text-lg md:text-xl font-bold gradient-text">Architettura Spiegata Semplice</h2>
+          <p className="text-xs md:text-sm text-muted-foreground">Come funziona la tua app, spiegato come a un amico</p>
         </div>
       </div>
 
       {/* Story Flow */}
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {storySteps.map((step, index) => (
           <motion.div
             key={index}
@@ -84,28 +84,28 @@ export function SimplifiedArchitectureFromStack({ technologies }: SimplifiedArch
             transition={{ duration: 0.4, delay: index * 0.1 }}
             className="relative"
           >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3 md:gap-4">
               {/* Step indicator */}
               <div className="flex flex-col items-center">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center text-white shadow-lg`}>
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center text-white shadow-lg`}>
                   {step.icon}
                 </div>
                 {index < storySteps.length - 1 && (
-                  <div className="w-0.5 h-8 bg-gradient-to-b from-border to-transparent mt-2" />
+                  <div className="w-0.5 h-6 md:h-8 bg-gradient-to-b from-border to-transparent mt-2" />
                 )}
               </div>
 
               {/* Content */}
-              <div className="flex-1 pb-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-semibold text-foreground">{step.title}</h3>
+              <div className="flex-1 pb-2 md:pb-4 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="font-semibold text-foreground text-sm md:text-base">{step.title}</h3>
                   {step.technology && (
-                    <span className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-mono">
+                    <span className="px-1.5 md:px-2 py-0.5 text-[10px] md:text-xs rounded-full bg-primary/10 text-primary font-mono">
                       {step.technology}
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
                   {step.description}
                 </p>
               </div>
@@ -119,13 +119,13 @@ export function SimplifiedArchitectureFromStack({ technologies }: SimplifiedArch
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="mt-6 p-4 rounded-lg bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/20"
+        className="mt-4 md:mt-6 p-3 md:p-4 rounded-lg bg-gradient-to-r from-primary/5 to-accent/5 border border-primary/20"
       >
-        <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+        <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2 text-sm md:text-base">
           <ArrowRight className="w-4 h-4 text-primary" />
           In sintesi
         </h4>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
           Pensa alla tua app come a un ristorante: il <strong className="text-foreground">Frontend</strong> è la sala dove i clienti mangiano, 
           lo <strong className="text-foreground">Styling</strong> è l'arredamento che rende tutto accogliente,
           il <strong className="text-foreground">Backend</strong> è la cucina dove si preparano i piatti, 

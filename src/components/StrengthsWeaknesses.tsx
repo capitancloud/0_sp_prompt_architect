@@ -67,11 +67,11 @@ export function StrengthsWeaknesses({ items }: StrengthsWeaknessesProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-card p-6"
+      className="glass-card p-4 md:p-6"
     >
-      <h2 className="text-xl font-bold mb-6 gradient-text">Analisi Punti di Forza e Debolezza</h2>
+      <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6 gradient-text">Analisi Punti di Forza e Debolezza</h2>
       
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {renderSection("Punti di Forza", strengths, 0.2)}
         {renderSection("Debolezze", weaknesses, 0.4)}
         {renderSection("Assunzioni Implicite", assumptions, 0.6)}

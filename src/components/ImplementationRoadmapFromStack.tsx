@@ -316,32 +316,32 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-card p-6"
+      className="glass-card p-4 md:p-6"
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Rocket className="w-5 h-5 text-primary" />
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4 md:mb-6">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="p-1.5 md:p-2 rounded-lg bg-primary/10">
+            <Rocket className="w-4 h-4 md:w-5 md:h-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-xl font-bold gradient-text">Roadmap di Implementazione</h2>
-            <p className="text-sm text-muted-foreground">
-              Piano basato sul tuo stack: {technologies.map(t => t.primary.name).join(', ')}
+            <h2 className="text-lg md:text-xl font-bold gradient-text">Roadmap di Implementazione</h2>
+            <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">
+              Piano basato sul tuo stack
             </p>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-2xl font-bold text-foreground">{totalDuration}+ giorni</div>
-          <div className="text-xs text-muted-foreground">Durata stimata totale</div>
+        <div className="text-left sm:text-right flex-shrink-0">
+          <div className="text-xl md:text-2xl font-bold text-foreground">{totalDuration}+ giorni</div>
+          <div className="text-[10px] md:text-xs text-muted-foreground">Durata stimata totale</div>
         </div>
       </div>
 
       {/* Progress Overview */}
-      <div className="mb-6 p-4 rounded-lg bg-card/50 border border-border/50">
+      <div className="mb-4 md:mb-6 p-3 md:p-4 rounded-lg bg-card/50 border border-border/50">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-foreground">Progresso</span>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-xs md:text-sm font-medium text-foreground">Progresso</span>
+          <span className="text-xs md:text-sm text-muted-foreground">
             {completedPhases.size}/{milestones.length} fasi completate
           </span>
         </div>
@@ -356,7 +356,7 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
       </div>
 
       {/* Timeline */}
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {milestones.map((milestone, index) => {
           const isCompleted = completedPhases.has(milestone.id);
           const isExpanded = expandedId === milestone.id;
@@ -379,18 +379,18 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
             >
               {/* Connection line */}
               {index < milestones.length - 1 && (
-                <div className="absolute left-[27px] top-full w-0.5 h-4 bg-gradient-to-b from-border to-transparent z-10" />
+                <div className="absolute left-[23px] md:left-[27px] top-full w-0.5 h-3 md:h-4 bg-gradient-to-b from-border to-transparent z-10" />
               )}
 
               {/* Main content */}
-              <div className="p-4">
-                <div className="flex items-start gap-4">
+              <div className="p-3 md:p-4">
+                <div className="flex items-start gap-3 md:gap-4">
                   {/* Phase indicator */}
                   <button
                     onClick={() => canStart && toggleComplete(milestone.id)}
                     disabled={!canStart}
                     className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
+                      "w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all",
                       isCompleted 
                         ? "bg-success text-success-foreground" 
                         : `bg-gradient-to-br ${milestone.color} text-white`,
@@ -399,7 +399,7 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
                     )}
                   >
                     {isCompleted ? (
-                      <CheckCircle2 className="w-6 h-6" />
+                      <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" />
                     ) : (
                       milestone.icon
                     )}
@@ -407,29 +407,30 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">
+                    <div className="flex items-center gap-1.5 md:gap-2 mb-1 flex-wrap">
+                      <span className="text-[10px] md:text-xs font-medium text-muted-foreground bg-muted/50 px-1.5 md:px-2 py-0.5 rounded">
                         Fase {milestone.phase}
                       </span>
                       {milestone.technology && (
-                        <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-0.5 rounded">
+                        <span className="text-[10px] md:text-xs font-mono text-primary bg-primary/10 px-1.5 md:px-2 py-0.5 rounded truncate max-w-[100px] md:max-w-none">
                           {milestone.technology}
                         </span>
                       )}
-                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <span className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {milestone.duration}
                       </span>
                       {!canStart && (
-                        <span className="text-xs text-warning flex items-center gap-1">
+                        <span className="text-[10px] md:text-xs text-warning flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3" />
-                          Richiede fasi precedenti
+                          <span className="hidden sm:inline">Richiede fasi precedenti</span>
+                          <span className="sm:hidden">Bloccato</span>
                         </span>
                       )}
                     </div>
                     
-                    <h3 className="font-semibold text-foreground">{milestone.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{milestone.description}</p>
+                    <h3 className="font-semibold text-foreground text-sm md:text-base">{milestone.title}</h3>
+                    <p className="text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2 md:line-clamp-none">{milestone.description}</p>
 
                     {/* Dependencies */}
                     {milestone.dependencies.length > 0 && (
@@ -476,12 +477,12 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mt-4 pt-4 border-t border-border/50"
+                    className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-border/50"
                   >
-                    <div className="grid md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
                       {/* Tasks */}
-                      <div className="p-3 rounded-lg bg-muted/30">
-                        <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
+                      <div className="p-2.5 md:p-3 rounded-lg bg-muted/30">
+                        <h4 className="text-[10px] md:text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
                           <Circle className="w-3 h-3 text-primary" />
                           Task
                         </h4>
@@ -496,8 +497,8 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
                       </div>
 
                       {/* Deliverables */}
-                      <div className="p-3 rounded-lg bg-success/5 border border-success/20">
-                        <h4 className="text-xs font-semibold text-success mb-2 flex items-center gap-1.5">
+                      <div className="p-2.5 md:p-3 rounded-lg bg-success/5 border border-success/20">
+                        <h4 className="text-[10px] md:text-xs font-semibold text-success mb-2 flex items-center gap-1.5">
                           <CheckCircle2 className="w-3 h-3" />
                           Deliverables
                         </h4>
@@ -513,8 +514,8 @@ export function ImplementationRoadmapFromStack({ technologies }: ImplementationR
 
                       {/* Risks */}
                       {milestone.risks.length > 0 && (
-                        <div className="p-3 rounded-lg bg-warning/5 border border-warning/20">
-                          <h4 className="text-xs font-semibold text-warning mb-2 flex items-center gap-1.5">
+                        <div className="p-2.5 md:p-3 rounded-lg bg-warning/5 border border-warning/20">
+                          <h4 className="text-[10px] md:text-xs font-semibold text-warning mb-2 flex items-center gap-1.5">
                             <AlertTriangle className="w-3 h-3" />
                             Rischi
                           </h4>

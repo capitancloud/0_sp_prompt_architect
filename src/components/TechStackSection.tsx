@@ -53,18 +53,18 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
       {/* Header with gradient */}
       <div className={`h-1.5 bg-gradient-to-r ${colors.gradient}`} />
       
-      <div className="p-5">
+      <div className="p-4 md:p-5">
         {/* Category & Name */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center text-2xl`}>
+        <div className="flex items-start justify-between mb-3 md:mb-4 gap-2">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl ${colors.bg} flex items-center justify-center text-xl md:text-2xl`}>
               {categoryIcons[tech.category] || "📦"}
             </div>
-            <div>
-              <span className={`text-xs font-medium uppercase tracking-wider ${colors.text}`}>
+            <div className="min-w-0">
+              <span className={`text-[10px] md:text-xs font-medium uppercase tracking-wider ${colors.text}`}>
                 {tech.category}
               </span>
-              <h3 className="text-lg font-bold text-foreground">{tech.primary?.name || "N/A"}</h3>
+              <h3 className="text-base md:text-lg font-bold text-foreground truncate">{tech.primary?.name || "N/A"}</h3>
             </div>
           </div>
           <button
@@ -80,14 +80,14 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
         </div>
         
         {/* Main Reason */}
-        <div className={`p-4 rounded-lg ${colors.bg} border ${colors.border} mb-4`}>
+        <div className={`p-3 md:p-4 rounded-lg ${colors.bg} border ${colors.border} mb-3 md:mb-4`}>
           <div className="flex items-start gap-2">
             <Lightbulb className={`w-4 h-4 ${colors.text} mt-0.5 flex-shrink-0`} />
             <div>
-              <h4 className={`text-xs font-semibold uppercase tracking-wider ${colors.text} mb-1`}>
+              <h4 className={`text-[10px] md:text-xs font-semibold uppercase tracking-wider ${colors.text} mb-1`}>
                 Perché questa scelta?
               </h4>
-              <p className="text-sm text-foreground leading-relaxed">
+              <p className="text-xs md:text-sm text-foreground leading-relaxed">
                 {tech.primary?.reason || "Motivazione non specificata"}
               </p>
             </div>
@@ -95,14 +95,14 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
         </div>
         
         {/* Pros & Cons Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="p-3 rounded-lg bg-success/5 border border-success/20">
-            <h4 className="text-xs font-semibold text-success mb-3 flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5" /> Vantaggi
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
+          <div className="p-2.5 md:p-3 rounded-lg bg-success/5 border border-success/20">
+            <h4 className="text-[10px] md:text-xs font-semibold text-success mb-2 md:mb-3 flex items-center gap-1.5">
+              <Check className="w-3 h-3 md:w-3.5 md:h-3.5" /> Vantaggi
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5 md:space-y-2">
               {(tech.primary?.pros || []).map((pro, i) => (
-                <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                <li key={i} className="text-xs md:text-sm text-muted-foreground flex items-start gap-2">
                   <span className="text-success mt-1 flex-shrink-0">•</span>
                   <span>{pro}</span>
                 </li>
@@ -110,13 +110,13 @@ export function TechStackCard({ tech, index, isExpanded, onToggle }: TechStackCa
             </ul>
           </div>
           
-          <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
-            <h4 className="text-xs font-semibold text-destructive mb-3 flex items-center gap-1.5">
-              <X className="w-3.5 h-3.5" /> Svantaggi
+          <div className="p-2.5 md:p-3 rounded-lg bg-destructive/5 border border-destructive/20">
+            <h4 className="text-[10px] md:text-xs font-semibold text-destructive mb-2 md:mb-3 flex items-center gap-1.5">
+              <X className="w-3 h-3 md:w-3.5 md:h-3.5" /> Svantaggi
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5 md:space-y-2">
               {(tech.primary?.cons || []).map((con, i) => (
-                <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                <li key={i} className="text-xs md:text-sm text-muted-foreground flex items-start gap-2">
                   <span className="text-destructive mt-1 flex-shrink-0">•</span>
                   <span>{con}</span>
                 </li>
@@ -390,32 +390,34 @@ export function TechStackSection({ technologies, isSynced = true }: TechStackSec
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 md:mb-6">
         <div className="flex items-center gap-3">
           <div>
-            <h2 className="text-xl font-bold gradient-text">Stack Tecnologico Suggerito</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-lg md:text-xl font-bold gradient-text">Stack Tecnologico Suggerito</h2>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
               Tecnologie raccomandate con analisi dettagliata e confronti
             </p>
           </div>
           {isSynced ? (
-            <Badge className="bg-success/20 text-success border-success/30 gap-1">
+            <Badge className="bg-success/20 text-success border-success/30 gap-1 text-[10px] md:text-xs">
               <Link2 className="w-3 h-3" />
-              Sincronizzato
+              <span className="hidden sm:inline">Sincronizzato</span>
+              <span className="sm:hidden">Sync</span>
             </Badge>
           ) : (
-            <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30 gap-1">
+            <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30 gap-1 text-[10px] md:text-xs">
               <AlertCircle className="w-3 h-3" />
-              Corretto
+              <span className="hidden sm:inline">Corretto</span>
+              <span className="sm:hidden">Fix</span>
             </Badge>
           )}
         </div>
-        <div className="text-xs text-muted-foreground bg-muted/30 px-3 py-1.5 rounded-full">
+        <div className="text-[10px] md:text-xs text-muted-foreground bg-muted/30 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full">
           {sortedTechnologies.length} tecnologie
         </div>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         {sortedTechnologies.map((tech, index) => (
           <TechStackCard 
             key={tech.category} 

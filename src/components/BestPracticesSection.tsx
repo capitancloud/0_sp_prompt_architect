@@ -27,14 +27,14 @@ export function BestPracticesSection({ title, subtitle, practices, type }: BestP
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-card p-6"
+      className="glass-card p-4 md:p-6"
     >
-      <div className="mb-6">
-        <h2 className="text-xl font-bold gradient-text">{title}</h2>
-        <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
+      <div className="mb-4 md:mb-6">
+        <h2 className="text-lg md:text-xl font-bold gradient-text">{title}</h2>
+        <p className="text-xs md:text-sm text-muted-foreground mt-1">{subtitle}</p>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-2 md:space-y-3">
         {practices.map((practice, index) => (
           <motion.div
             key={practice.id}
@@ -49,20 +49,20 @@ export function BestPracticesSection({ title, subtitle, practices, type }: BestP
             )}
             onClick={() => setExpandedId(expandedId === practice.id ? null : practice.id)}
           >
-            <div className="p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3">
+            <div className="p-3 md:p-4">
+              <div className="flex items-start justify-between gap-3 md:gap-4">
+                <div className="flex items-start gap-2 md:gap-3">
                   <div className={cn(
-                    "p-2 rounded-lg",
+                    "p-1.5 md:p-2 rounded-lg",
                     type === "vibe" ? "bg-accent/20 text-accent" : "bg-primary/20 text-primary"
                   )}>
                     {categoryIcons[practice.category] || <BookOpen className="w-4 h-4" />}
                   </div>
-                  <div>
-                    <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                  <div className="min-w-0">
+                    <span className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
                       {practice.category}
                     </span>
-                    <h3 className="font-medium text-foreground">{practice.title}</h3>
+                    <h3 className="font-medium text-foreground text-sm md:text-base">{practice.title}</h3>
                   </div>
                 </div>
                 <ChevronDown 
@@ -82,16 +82,16 @@ export function BestPracticesSection({ title, subtitle, practices, type }: BestP
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden"
               >
-                <div className="pt-4 pl-11 space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                <div className="pt-3 md:pt-4 pl-8 md:pl-11 space-y-3 md:space-y-4">
+                  <p className="text-xs md:text-sm text-muted-foreground">
                     {practice.description}
                   </p>
                   
                   {practice.examples.length > 0 && (
-                    <div className="bg-background/50 p-3 rounded-lg border border-border/50">
-                      <h4 className="text-xs font-medium text-foreground mb-2">Esempi:</h4>
+                    <div className="bg-background/50 p-2.5 md:p-3 rounded-lg border border-border/50">
+                      <h4 className="text-[10px] md:text-xs font-medium text-foreground mb-2">Esempi:</h4>
                       {practice.examples.map((example, i) => (
-                        <p key={i} className="text-sm font-mono text-muted-foreground mb-1">
+                        <p key={i} className="text-xs md:text-sm font-mono text-muted-foreground mb-1 break-all">
                           {example}
                         </p>
                       ))}

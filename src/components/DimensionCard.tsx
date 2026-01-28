@@ -32,18 +32,18 @@ export function DimensionCard({ dimension, index }: DimensionCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="glass-card p-5 hover:bg-card/90 transition-colors cursor-pointer"
+      className="glass-card p-4 md:p-5 hover:bg-card/90 transition-colors cursor-pointer"
       onClick={() => setIsExpanded(!isExpanded)}
     >
-      <div className="flex items-start gap-4">
-        <span className="text-2xl">{dimension.icon}</span>
+      <div className="flex items-start gap-3 md:gap-4">
+        <span className="text-xl md:text-2xl">{dimension.icon}</span>
         
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold text-foreground">{dimension.name}</h3>
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between mb-2 gap-2">
+            <h3 className="font-semibold text-foreground text-sm md:text-base truncate">{dimension.name}</h3>
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
               <span className={cn(
-                "px-2.5 py-1 rounded-md text-sm font-medium border",
+                "px-2 py-0.5 md:px-2.5 md:py-1 rounded-md text-xs md:text-sm font-medium border",
                 getScoreBadgeClass()
               )}>
                 {dimension.score}/{dimension.maxScore}
