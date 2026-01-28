@@ -24,23 +24,23 @@ export function AnalysisResults({ result, originalPrompt, isSynced = true }: Ana
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full max-w-6xl mx-auto px-4 py-8 space-y-8"
+      className="w-full max-w-6xl mx-auto px-3 md:px-4 py-4 md:py-8 space-y-6 md:space-y-8"
     >
       {/* Overall Score Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card-elevated p-8 text-center"
+        className="glass-card-elevated p-5 md:p-8 text-center"
       >
-        <h2 className="text-2xl font-bold text-foreground mb-6">Risultato Analisi</h2>
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-6">Risultato Analisi</h2>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8">
           <ScoreRing 
             score={result.overallScore} 
             size="lg" 
             label="Punteggio Complessivo" 
           />
-          <div className="text-left max-w-md">
-            <p className="text-muted-foreground">
+          <div className="text-center md:text-left max-w-md">
+            <p className="text-sm md:text-base text-muted-foreground">
               Il tuo prompt ha ottenuto un punteggio di <span className="text-primary font-semibold">{result.overallScore}/100</span>. 
               Ci sono diverse aree di miglioramento, in particolare nella definizione dei requisiti non funzionali 
               e nei vincoli tecnici.
@@ -51,35 +51,41 @@ export function AnalysisResults({ result, originalPrompt, isSynced = true }: Ana
       
       {/* Tabbed Content */}
       <Tabs defaultValue="dimensions" className="w-full">
-        <TabsList className="w-full justify-start bg-card/50 border border-border/50 p-1 rounded-xl mb-6 flex-wrap h-auto gap-1">
-          <TabsTrigger value="dimensions" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-            <BarChart3 className="w-4 h-4" />
-            Dimensioni
+        <TabsList className="w-full justify-start bg-card/50 border border-border/50 p-1 rounded-xl mb-4 md:mb-6 flex flex-wrap h-auto gap-1">
+          <TabsTrigger value="dimensions" className="gap-1.5 text-xs md:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 md:px-3">
+            <BarChart3 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Dimensioni</span>
+            <span className="sm:hidden">Score</span>
           </TabsTrigger>
-          <TabsTrigger value="swot" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-            <Sparkles className="w-4 h-4" />
-            Analisi SWOT
+          <TabsTrigger value="swot" className="gap-1.5 text-xs md:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 md:px-3">
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Analisi SWOT</span>
+            <span className="sm:hidden">SWOT</span>
           </TabsTrigger>
-          <TabsTrigger value="optimized" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-            <Code2 className="w-4 h-4" />
-            Prompt Ottimizzato
+          <TabsTrigger value="optimized" className="gap-1.5 text-xs md:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 md:px-3">
+            <Code2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Prompt Ottimizzato</span>
+            <span className="sm:hidden">Prompt</span>
           </TabsTrigger>
-          <TabsTrigger value="architecture" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-            <Layers className="w-4 h-4" />
-            Architettura
+          <TabsTrigger value="architecture" className="gap-1.5 text-xs md:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 md:px-3">
+            <Layers className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Architettura</span>
+            <span className="sm:hidden">Arch</span>
           </TabsTrigger>
-          <TabsTrigger value="roadmap" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-            <Rocket className="w-4 h-4" />
-            Roadmap
+          <TabsTrigger value="roadmap" className="gap-1.5 text-xs md:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 md:px-3">
+            <Rocket className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Roadmap</span>
+            <span className="sm:hidden">Road</span>
           </TabsTrigger>
-          <TabsTrigger value="practices" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg">
-            <BookOpen className="w-4 h-4" />
-            Best Practices
+          <TabsTrigger value="practices" className="gap-1.5 text-xs md:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-2 md:px-3">
+            <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden sm:inline">Best Practices</span>
+            <span className="sm:hidden">Tips</span>
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="dimensions" className="space-y-4 mt-0">
-          <div className="grid md:grid-cols-2 gap-4">
+        <TabsContent value="dimensions" className="space-y-3 md:space-y-4 mt-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {result.dimensions.map((dim, index) => (
               <DimensionCard key={dim.id} dimension={dim} index={index} />
             ))}
@@ -97,7 +103,7 @@ export function AnalysisResults({ result, originalPrompt, isSynced = true }: Ana
           />
         </TabsContent>
         
-        <TabsContent value="architecture" className="space-y-6 mt-0">
+        <TabsContent value="architecture" className="space-y-4 md:space-y-6 mt-0">
           <SimplifiedArchitectureFromStack technologies={result.technologies} />
           <TechStackSection technologies={result.technologies} isSynced={isSynced} />
           <ArchitectureDiagramFromStack technologies={result.technologies} />
@@ -107,7 +113,7 @@ export function AnalysisResults({ result, originalPrompt, isSynced = true }: Ana
           <ImplementationRoadmapFromStack technologies={result.technologies} />
         </TabsContent>
         
-        <TabsContent value="practices" className="space-y-6 mt-0">
+        <TabsContent value="practices" className="space-y-4 md:space-y-6 mt-0">
           <BestPracticesSection
             title="Vibe Coding Best Practices"
             subtitle="Come interagire efficacemente con l'AI per generare codice di qualità"

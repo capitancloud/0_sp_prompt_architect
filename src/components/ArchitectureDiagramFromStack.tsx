@@ -76,14 +76,14 @@ export function ArchitectureDiagramFromStack({ technologies }: ArchitectureDiagr
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-card p-6"
+      className="glass-card p-4 md:p-6"
     >
-      <h2 className="text-xl font-bold gradient-text mb-2">Diagramma Architettura Completo</h2>
-      <p className="text-sm text-muted-foreground mb-6">
+      <h2 className="text-lg md:text-xl font-bold gradient-text mb-1 md:mb-2">Diagramma Architettura Completo</h2>
+      <p className="text-xs md:text-sm text-muted-foreground mb-4 md:mb-6">
         Visualizzazione interattiva dei 6 blocchi dello stack tecnologico organizzati per layer
       </p>
       
-      <div className="flex flex-col xl:flex-row gap-6">
+      <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
         {/* Layered Architecture Diagram */}
         <div className="flex-1 space-y-4">
           {Object.entries(layers).map(([layerName, layerTechs], layerIndex) => {
@@ -98,15 +98,15 @@ export function ArchitectureDiagramFromStack({ technologies }: ArchitectureDiagr
                 className="relative"
               >
                 {/* Layer Header */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg">{layerLabels[layerName]?.icon}</span>
-                  <h3 className="text-sm font-semibold text-foreground">{layerName}</h3>
-                  <span className="text-xs text-muted-foreground">— {layerLabels[layerName]?.description}</span>
+                <div className="flex items-center gap-2 mb-2 md:mb-3 flex-wrap">
+                  <span className="text-base md:text-lg">{layerLabels[layerName]?.icon}</span>
+                  <h3 className="text-xs md:text-sm font-semibold text-foreground">{layerName}</h3>
+                  <span className="text-[10px] md:text-xs text-muted-foreground">— {layerLabels[layerName]?.description}</span>
                 </div>
 
                 {/* Technologies in this layer */}
-                <div className="relative p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="relative p-3 md:p-4 rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
                     {layerTechs.map((tech, index) => {
                       const style = getCategoryStyle(tech.category);
                       const isSelected = selectedCategory === tech.category;
@@ -119,7 +119,7 @@ export function ArchitectureDiagramFromStack({ technologies }: ArchitectureDiagr
                           transition={{ duration: 0.3, delay: index * 0.05 }}
                           onClick={() => setSelectedCategory(isSelected ? null : tech.category)}
                           className={cn(
-                            "relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-300",
+                            "relative p-3 md:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300",
                             "hover:shadow-lg hover:scale-[1.02]",
                             isSelected 
                               ? `${style.bgColor} ${style.borderColor} shadow-lg` 
@@ -130,9 +130,9 @@ export function ArchitectureDiagramFromStack({ technologies }: ArchitectureDiagr
                           <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-md bg-gradient-to-r ${style.gradient}`} />
                           
                           <div className="pt-1">
-                            <h4 className="font-semibold text-foreground text-sm mb-1">{tech.category}</h4>
-                            <p className={`text-xs font-mono ${style.textColor} mb-2`}>{tech.primary.name}</p>
-                            <p className="text-xs text-muted-foreground line-clamp-2">{tech.primary.reason}</p>
+                            <h4 className="font-semibold text-foreground text-xs md:text-sm mb-1">{tech.category}</h4>
+                            <p className={`text-[10px] md:text-xs font-mono ${style.textColor} mb-1 md:mb-2`}>{tech.primary.name}</p>
+                            <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2">{tech.primary.reason}</p>
                           </div>
 
                           {/* Pros/Cons indicator */}

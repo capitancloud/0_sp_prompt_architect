@@ -43,12 +43,12 @@ export function OptimizedPrompt({ originalPrompt, optimizedPrompt }: OptimizedPr
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-card-elevated p-6 gradient-border"
+      className="glass-card-elevated p-4 md:p-6 gradient-border"
     >
-      <div className="flex items-center justify-between mb-6 relative z-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 md:mb-6 relative z-10">
         <div>
-          <h2 className="text-xl font-bold gradient-text">Prompt Ottimizzato</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <h2 className="text-lg md:text-xl font-bold gradient-text">Prompt Ottimizzato</h2>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1">
             Versione migliorata e strutturata del tuo prompt
           </p>
         </div>
@@ -57,15 +57,15 @@ export function OptimizedPrompt({ originalPrompt, optimizedPrompt }: OptimizedPr
           variant="glow"
           size="sm"
           onClick={handleDownload}
-          className="gap-2 relative z-20"
+          className="gap-2 relative z-20 w-full sm:w-auto"
         >
           <Download className="w-4 h-4" />
           Scarica .md
         </Button>
       </div>
       
-      <div className="p-6 rounded-xl bg-card/50 border border-border/50 relative z-10">
-        <div className="prose prose-invert max-w-none">
+      <div className="p-4 md:p-6 rounded-xl bg-card/50 border border-border/50 relative z-10">
+        <div className="prose prose-invert max-w-none prose-sm md:prose-base">
           <ReactMarkdown
             components={{
               h1: ({ children }) => (
