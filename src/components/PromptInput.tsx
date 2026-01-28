@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Send, Loader2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,8 +14,35 @@ L'utente deve poter inserire spese con categoria, importo e data.
 Deve esserci un dashboard con grafici che mostrano le spese per categoria. 
 Vorrei anche un sistema di budget mensili con alert quando si supera il limite.`;
 
+const loadingMessages = [
+  "Analizzando la struttura del prompt...",
+  "Valutando la chiarezza degli obiettivi...",
+  "Identificando i requisiti funzionali...",
+  "Verificando i vincoli tecnici...",
+  "Suggerendo lo stack tecnologico...",
+  "Generando architettura consigliata...",
+  "Valutando scalabilità e sicurezza...",
+  "Creando best practices personalizzate...",
+  "Ottimizzando il prompt finale...",
+  "Completando l'analisi SWOT...",
+];
+
 export function PromptInput({ onAnalyze, isLoading }: PromptInputProps) {
   const [prompt, setPrompt] = useState("");
+  const [messageIndex, setMessageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setMessageIndex(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isLoading]);
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,10 +99,21 @@ export function PromptInput({ onAnalyze, isLoading }: PromptInputProps) {
               className="min-w-[180px]"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Analizzando...
-                </>
+                <span className="flex items-center gap-2 min-w-[200px]">
+                  <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={messageIndex}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-left"
+                    >
+                      {loadingMessages[messageIndex]}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
