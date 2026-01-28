@@ -1,102 +1,137 @@
 
+# Piano: Implementazione Categorie Fisse per Stack Tecnologico
 
-# Piano: Sincronizzazione Stack Tecnologico e Diagramma Architettura
+## Obiettivo
 
-## Problema Identificato
-
-L'analisi AI genera due strutture dati separate che dovrebbero rappresentare la stessa architettura ma non sono vincolate a essere coerenti:
-
-| Sezione | Array | Esempio output attuale |
-|---------|-------|------------------------|
-| Stack Tecnologico Suggerito | `technologies[]` | Frontend: Next.js |
-| Diagramma Architettura | `architecture[]` | Frontend Layer: React + Vite |
-
-L'AI non riceve istruzioni esplicite per mantenere questi due array sincronizzati, causando discrepanze confuse per l'utente.
+Garantire che lo Stack Tecnologico generi **sempre** 6 categorie fisse, indipendentemente dal prompt dell'utente, per una copertura completa e coerente dell'architettura.
 
 ---
 
-## Soluzione Proposta
+## Le 6 Categorie Fisse
 
-Modificheremo il **system prompt** della edge function per forzare la coerenza tra le due sezioni e aggiungeremo una validazione lato frontend.
+| # | Categoria | Descrizione | Icona |
+|---|-----------|-------------|-------|
+| 1 | **Frontend** | Framework/libreria per l'interfaccia utente | ⚛️ |
+| 2 | **Styling** | Sistema di styling e design | 🎨 |
+| 3 | **Backend** | Logica server-side e API | ⚙️ |
+| 4 | **Database** | Persistenza e gestione dati | 🗄️ |
+| 5 | **Autenticazione** | Gestione utenti e sessioni | 🔐 |
+| 6 | **Hosting** | Piattaforma di deployment e infrastruttura | ☁️ |
 
-### Fase 1: Aggiornamento System Prompt (Edge Function)
+---
 
-Modifiche al file `supabase/functions/analyze-prompt/index.ts`:
+## Modifiche da Implementare
 
-1. **Aggiungere regola esplicita di coerenza** nelle linee guida:
-   ```
-   REGOLA CRITICA DI COERENZA:
-   - Le tecnologie nell'array "technologies" DEVONO corrispondere esattamente 
-     alle tecnologie nell'array "architecture"
-   - Per ogni categoria in "technologies" (Frontend, Backend, Database, Autenticazione), 
-     il campo "primary.name" deve essere IDENTICO al campo "technology" del componente 
-     corrispondente in "architecture"
-   - Esempio: se technologies[Frontend].primary.name = "Next.js", 
-     allora architecture[frontend-layer].technology = "Next.js"
-   ```
+### 1. Aggiornamento Edge Function (System Prompt)
 
-2. **Specificare le mappature attese**:
-   ```
-   MAPPATURE OBBLIGATORIE:
-   - technologies[Frontend] ↔ architecture[frontend] o [presentation-layer]
-   - technologies[Backend] ↔ architecture[backend] o [api-layer]  
-   - technologies[Database] ↔ architecture[database] o [data-layer]
-   - technologies[Autenticazione] ↔ architecture[auth] o componente autenticazione
-   ```
+**File:** `supabase/functions/analyze-prompt/index.ts`
 
-### Fase 2: Validazione Frontend (Opzionale ma consigliata)
+Modificare il system prompt per:
+- Elencare esplicitamente le 6 categorie obbligatorie
+- Specificare che TUTTE devono essere sempre presenti nell'output
+- Rimuovere varianti come "Backend/AI", "Auth", "Infrastructure" per uniformità
 
-Aggiungere una funzione di validazione in `src/services/analysisService.ts` che:
+```
+CATEGORIE STACK TECNOLOGICO (TUTTE OBBLIGATORIE):
+L'array "technologies" DEVE contenere ESATTAMENTE 6 elementi, uno per categoria:
+1. Frontend - Framework/libreria UI (es. Next.js, React, Vue)
+2. Styling - Sistema di styling (es. Tailwind CSS, CSS Modules, Styled Components)
+3. Backend - Logica server e API (es. Node.js, Edge Functions, Express)
+4. Database - Persistenza dati (es. PostgreSQL, Supabase, MongoDB)
+5. Autenticazione - Gestione utenti (es. Supabase Auth, Clerk, Auth0)
+6. Hosting - Piattaforma deployment (es. Vercel, AWS, Netlify)
 
-1. Dopo aver ricevuto la risposta dall'AI, verifichi la coerenza
-2. Se trova discrepanze, le corregga automaticamente allineando l'architecture al technologies (fonte primaria)
-3. Logga eventuali correzioni per debugging
+NON omettere nessuna categoria. NON usare varianti dei nomi (es. "Auth" invece di "Autenticazione").
+```
+
+### 2. Aggiornamento Frontend (UI)
+
+**File:** `src/components/TechStackSection.tsx`
+
+Modifiche:
+- Definire un array costante `FIXED_CATEGORIES` con le 6 categorie
+- Ordinare le tecnologie ricevute secondo l'ordine delle categorie fisse
+- Mostrare un placeholder/warning se una categoria manca (fallback difensivo)
+- Semplificare `categoryIcons` e `categoryColors` rimuovendo duplicati
 
 ```typescript
-function validateAndSyncArchitecture(result: AnalysisResult): AnalysisResult {
-  const techMap = new Map(
-    result.technologies.map(t => [t.category.toLowerCase(), t.primary.name])
-  );
+const FIXED_CATEGORIES = [
+  "Frontend",
+  "Styling", 
+  "Backend",
+  "Database",
+  "Autenticazione",
+  "Hosting"
+] as const;
+
+// Ordinamento garantito
+const sortedTechnologies = FIXED_CATEGORIES.map(category => 
+  technologies.find(t => t.category === category) || createPlaceholder(category)
+);
+```
+
+### 3. Validazione Service (Fallback)
+
+**File:** `src/services/analysisService.ts`
+
+Aggiungere una funzione di validazione che:
+- Verifichi che tutte le 6 categorie siano presenti
+- Aggiunga placeholder per categorie mancanti
+- Logga eventuali categorie mancanti per debugging
+
+```typescript
+function ensureAllCategories(technologies: TechnologySuggestion[]): TechnologySuggestion[] {
+  const existing = new Set(technologies.map(t => t.category));
   
-  result.architecture = result.architecture.map(comp => {
-    const category = detectCategory(comp.name); // Frontend, Backend, etc.
-    const expectedTech = techMap.get(category);
-    if (expectedTech && comp.technology !== expectedTech) {
-      console.warn(`Fixing mismatch: ${comp.name} was ${comp.technology}, should be ${expectedTech}`);
-      return { ...comp, technology: expectedTech };
+  FIXED_CATEGORIES.forEach(category => {
+    if (!existing.has(category)) {
+      console.warn(`Missing category: ${category}, adding placeholder`);
+      technologies.push(createPlaceholder(category));
     }
-    return comp;
   });
   
-  return result;
+  return technologies;
 }
 ```
 
-### Fase 3: Indicatore Visivo di Coerenza (Enhancement)
+---
 
-Nella UI, aggiungere un piccolo indicatore che mostri che le sezioni sono sincronizzate:
+## Diagramma del Flusso
 
-- Badge "Sincronizzato" verde quando le tecnologie corrispondono
-- Se per qualche motivo non corrispondono, mostrare un warning
+```text
++------------------+     +-------------------+     +------------------+
+|   User Prompt    | --> |  Edge Function    | --> |  Validation      |
+|                  |     |  (6 categorie     |     |  Service         |
+|                  |     |   obbligatorie)   |     |  (fallback)      |
++------------------+     +-------------------+     +------------------+
+                                                           |
+                                                           v
+                                                  +------------------+
+                                                  |  TechStackSection|
+                                                  |  (ordine fisso)  |
+                                                  +------------------+
+```
 
 ---
 
 ## File da Modificare
 
-| File | Modifica |
-|------|----------|
-| `supabase/functions/analyze-prompt/index.ts` | Aggiornare system prompt con regole di coerenza |
-| `src/services/analysisService.ts` | Aggiungere funzione di validazione/sync |
-| `src/components/TechStackSection.tsx` | (Opzionale) Aggiungere badge di coerenza |
+| File | Tipo Modifica |
+|------|---------------|
+| `supabase/functions/analyze-prompt/index.ts` | Aggiornare system prompt con categorie obbligatorie |
+| `src/services/analysisService.ts` | Aggiungere validazione categorie |
+| `src/components/TechStackSection.tsx` | Ordinamento fisso e cleanup varianti |
+| `src/types/analysis.ts` | (opzionale) Aggiungere tipo `FixedCategory` |
 
 ---
 
 ## Risultato Atteso
 
-Dopo questa modifica:
-- Lo Stack Tecnologico e il Diagramma Architettura mostreranno **sempre** le stesse tecnologie
-- Se l'utente vede "Next.js" nello stack, vedrà "Next.js" anche nel diagramma
-- La validazione frontend garantisce coerenza anche se l'AI dovesse sbagliare
+Dopo l'implementazione:
+- Lo Stack Tecnologico mostrera **sempre** 6 card, nell'ordine: Frontend → Styling → Backend → Database → Autenticazione → Hosting
+- L'AI e obbligata a fornire suggerimenti per tutte le categorie
+- Se una categoria manca (edge case), viene mostrato un placeholder informativo
+- La UI e piu pulita senza varianti confuse come "Backend/AI" o "Auth"
 
 ---
 
@@ -105,67 +140,85 @@ Dopo questa modifica:
 ### Dettaglio modifica system prompt
 
 ```diff
-LINEE GUIDA:
-- Sii specifico e concreto nei suggerimenti
-- Fornisci esempi pratici di come migliorare il prompt
-- Il prompt ottimizzato deve essere in formato markdown strutturato
-- Le tecnologie suggerite devono essere moderne e adatte al caso
-- Identifica almeno 3 punti di forza, 3 debolezze e 2-3 assunzioni implicite
-- Le best practice devono essere collegate ai problemi specifici del prompt
-- Rispondi SOLO con JSON valido, nessun testo aggiuntivo prima o dopo
+  "technologies": [
+    {
+-     "category": "<Frontend|Styling|Backend|Database|Autenticazione>",
++     "category": "<vedi categorie obbligatorie sotto>",
+      "primary": {
+        "name": "<nome tecnologia>",
+...
+
++ CATEGORIE STACK TECNOLOGICO (TUTTE OBBLIGATORIE):
++ L'array "technologies" DEVE contenere ESATTAMENTE 6 elementi, uno per ogni categoria nell'ordine:
++ 1. "Frontend" - Framework/libreria per UI (React, Next.js, Vue, Angular)
++ 2. "Styling" - Sistema di styling (Tailwind CSS, CSS Modules, Styled Components, Sass)
++ 3. "Backend" - Logica server e API (Node.js, Edge Functions, Express, FastAPI)
++ 4. "Database" - Persistenza dati (PostgreSQL, Supabase, MongoDB, MySQL)
++ 5. "Autenticazione" - Gestione utenti (Supabase Auth, Clerk, Auth0, NextAuth)
++ 6. "Hosting" - Piattaforma deployment (Vercel, Netlify, AWS, Railway)
 + 
-+ REGOLA CRITICA - COERENZA TRA SEZIONI:
-+ Le tecnologie specificate nell'array "technologies" DEVONO essere IDENTICHE 
-+ a quelle nell'array "architecture". Usa ESATTAMENTE gli stessi nomi:
-+ - technologies[category="Frontend"].primary.name === architecture[*frontend*].technology
-+ - technologies[category="Backend"].primary.name === architecture[*backend*|*api*].technology
-+ - technologies[category="Database"].primary.name === architecture[*database*|*db*].technology
-+ - technologies[category="Autenticazione"].primary.name === architecture[*auth*].technology
-+ Non usare varianti (es. "React" vs "React + Vite") - scegli un nome e usalo ovunque.
++ REGOLE:
++ - Includi SEMPRE tutte e 6 le categorie, anche se il prompt non le menziona esplicitamente
++ - Usa ESATTAMENTE questi nomi di categoria (no varianti come "Auth" o "Infrastructure")
++ - Suggerisci tecnologie appropriate al contesto del prompt per ogni categoria
 ```
 
-### Logica di validazione frontend
+### Funzione placeholder per categorie mancanti
 
 ```typescript
 // src/services/analysisService.ts
 
-const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  frontend: ['frontend', 'presentation', 'ui', 'client', 'next', 'react'],
-  backend: ['backend', 'api', 'server', 'edge', 'function'],
-  database: ['database', 'db', 'data', 'storage', 'postgres', 'supabase'],
-  autenticazione: ['auth', 'identity', 'login', 'user']
-};
+const FIXED_CATEGORIES = ["Frontend", "Styling", "Backend", "Database", "Autenticazione", "Hosting"] as const;
 
-function detectCategory(componentName: string): string | null {
-  const lower = componentName.toLowerCase();
-  for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
-    if (keywords.some(kw => lower.includes(kw))) {
-      return category;
+function createPlaceholder(category: string): TechnologySuggestion {
+  return {
+    category,
+    primary: {
+      name: "Da definire",
+      reason: "L'AI non ha fornito un suggerimento per questa categoria",
+      pros: ["Flessibilita nella scelta"],
+      cons: ["Richiede valutazione manuale"]
+    },
+    alternative: {
+      name: "Vedi best practices",
+      reason: "Consulta la documentazione del settore",
+      whenToUse: "Quando hai requisiti specifici"
     }
-  }
-  return null;
+  };
 }
 
-export function validateAndSyncArchitecture(result: AnalysisResult): AnalysisResult {
-  // Crea mappa categoria → tecnologia primaria
-  const techMap = new Map<string, string>();
-  result.technologies.forEach(t => {
-    techMap.set(t.category.toLowerCase(), t.primary.name);
-  });
-
-  // Sincronizza architecture con technologies
-  const syncedArchitecture = result.architecture.map(comp => {
-    const category = detectCategory(comp.name);
-    if (category) {
-      const expectedTech = techMap.get(category);
-      if (expectedTech && comp.technology !== expectedTech) {
-        return { ...comp, technology: expectedTech };
-      }
-    }
-    return comp;
-  });
-
-  return { ...result, architecture: syncedArchitecture };
+export function ensureAllCategories(technologies: TechnologySuggestion[]): TechnologySuggestion[] {
+  const categoryMap = new Map(technologies.map(t => [t.category, t]));
+  
+  return FIXED_CATEGORIES.map(category => 
+    categoryMap.get(category) || createPlaceholder(category)
+  );
 }
 ```
 
+### Aggiornamento TechStackSection
+
+```typescript
+// src/components/TechStackSection.tsx
+
+const FIXED_CATEGORIES = ["Frontend", "Styling", "Backend", "Database", "Autenticazione", "Hosting"] as const;
+
+// Rimuovere varianti duplicate da categoryIcons e categoryColors
+const categoryIcons: Record<string, string> = {
+  "Frontend": "⚛️",
+  "Styling": "🎨",
+  "Backend": "⚙️",
+  "Database": "🗄️",
+  "Autenticazione": "🔐",
+  "Hosting": "☁️"
+};
+
+// Ordinamento garantito nel componente
+export function TechStackSection({ technologies, isSynced = true }: TechStackSectionProps) {
+  const sortedTechnologies = FIXED_CATEGORIES
+    .map(category => technologies.find(t => t.category === category))
+    .filter((t): t is TechnologySuggestion => t !== undefined);
+  
+  // ... resto del componente usa sortedTechnologies
+}
+```
