@@ -45,7 +45,7 @@ export function OptimizedPrompt({ originalPrompt, optimizedPrompt }: OptimizedPr
       transition={{ duration: 0.5 }}
       className="glass-card-elevated p-6 gradient-border"
     >
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 relative z-10">
         <div>
           <h2 className="text-xl font-bold gradient-text">Prompt Ottimizzato</h2>
           <p className="text-sm text-muted-foreground mt-1">
@@ -57,7 +57,7 @@ export function OptimizedPrompt({ originalPrompt, optimizedPrompt }: OptimizedPr
           variant="glow"
           size="sm"
           onClick={handleDownload}
-          className="gap-2"
+          className="gap-2 relative z-20"
         >
           <Download className="w-4 h-4" />
           Scarica .md
