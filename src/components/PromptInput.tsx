@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Loader2, FileText } from "lucide-react";
+import { Send, Loader2, FileText, Lock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/hooks/useAuth";
 
 interface PromptInputProps {
   onAnalyze: (prompt: string) => void;
@@ -30,6 +32,7 @@ const loadingMessages = [
 export function PromptInput({ onAnalyze, isLoading }: PromptInputProps) {
   const [prompt, setPrompt] = useState("");
   const [messageIndex, setMessageIndex] = useState(0);
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
@@ -46,7 +49,7 @@ export function PromptInput({ onAnalyze, isLoading }: PromptInputProps) {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (prompt.trim()) {
+    if (prompt.trim() && user) {
       onAnalyze(prompt);
     }
   };
@@ -91,36 +94,50 @@ export function PromptInput({ onAnalyze, isLoading }: PromptInputProps) {
               {prompt.length} / 5000 caratteri
             </p>
             
-            <Button
-              type="submit"
-              variant="glow"
-              size="lg"
-              disabled={!prompt.trim() || isLoading}
-              className="min-w-[180px]"
-            >
-              {isLoading ? (
-                <span className="flex items-center gap-2 min-w-[200px]">
-                  <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={messageIndex}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3 }}
-                      className="text-left"
-                    >
-                      {loadingMessages[messageIndex]}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  Analizza Prompt
-                </>
-              )}
-            </Button>
+            {!authLoading && !user ? (
+              <Link to="/auth">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="min-w-[180px] gap-2"
+                >
+                  <Lock className="w-4 h-4" />
+                  Accedi per analizzare
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                type="submit"
+                variant="glow"
+                size="lg"
+                disabled={!prompt.trim() || isLoading || !user}
+                className="min-w-[180px]"
+              >
+                {isLoading ? (
+                  <span className="flex items-center gap-2 min-w-[200px]">
+                    <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={messageIndex}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-left"
+                      >
+                        {loadingMessages[messageIndex]}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Analizza Prompt
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </div>
       </form>
