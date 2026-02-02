@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Lock, Loader2, AlertCircle } from "lucide-react";
+import { Lock, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAccessGate } from "@/hooks/useAccessGate";
+import superProgrammatoreLogo from "@/assets/super-programmatore-logo.png";
 
 export function AccessCodeEntry() {
   const [code, setCode] = useState("");
@@ -51,11 +52,17 @@ export function AccessCodeEntry() {
         className="relative z-10 w-full max-w-md mx-4"
       >
         <div className="glass-card-elevated p-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src={superProgrammatoreLogo} 
+              alt="Super Programmatore" 
+              className="w-48 h-auto md:w-56"
+            />
+          </div>
+
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
-              <Shield className="w-8 h-8 text-primary" />
-            </div>
             <h1 className="text-2xl font-bold text-foreground">
               Accesso Riservato
             </h1>
@@ -107,7 +114,7 @@ export function AccessCodeEntry() {
                 </>
               ) : (
                 <>
-                  <Shield className="w-4 h-4" />
+                  <Lock className="w-4 h-4" />
                   Accedi
                 </>
               )}
