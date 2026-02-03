@@ -180,21 +180,6 @@ export default function Auth() {
             </Button>
           </form>
 
-          {/* Toggle */}
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors({});
-              }}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              {isLogin 
-                ? "Non hai un account? Registrati" 
-                : "Hai già un account? Accedi"}
-            </button>
-          </div>
         </div>
       </motion.div>
     </div>
